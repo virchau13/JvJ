@@ -1,0 +1,5 @@
+JavaScript:
+https://github.com/jasondavies/d3-cloud
+
+Python:
+https://github.com/amueller/word_cloud
