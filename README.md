@@ -1,2 +1,5 @@
 # JvJ
-well then, isn't this neat
+
+## The ultimate showdown of the Search Engine and the Finance App!
+
+Proudly brought to you by the team at JVJ!
