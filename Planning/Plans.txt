@@ -1,0 +1,7 @@
+///   JvJ   \\\
+
+OPTION 1:
+Wordcloud-enhanced version of a search engine
+
+OPTION 2:
+Finance app based on stocks
