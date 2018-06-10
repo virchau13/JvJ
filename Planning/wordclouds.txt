@@ -1,5 +1,6 @@
 JavaScript:
 https://github.com/jasondavies/d3-cloud
+https://www.npmjs.com/package/wordcloud
 
 Python:
 https://github.com/amueller/word_cloud
