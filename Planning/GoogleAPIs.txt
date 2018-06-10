@@ -1,0 +1,18 @@
+Custom Search JSON API
+
+Homepage:
+https://developers.google.com/custom-search/json-api/v1/overview
+
+Tutorial:
+https://developers.google.com/custom-search/docs/tutorial/introduction
+
+CALL:
+https://www.googleapis.com/customsearch/v1?parameters
+
+Three query parameters are required with each search request:
+
+API key - Use the key query parameter to identify your application.
+
+Custom search engine ID - Use cx to specify the custom search engine you want to use to perform this search. The search engine must be created with the Control Panel
+
+Search query - Use the q query parameter to specify your search expression.
