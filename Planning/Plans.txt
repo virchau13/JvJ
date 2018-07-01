@@ -1,7 +1,13 @@
 ///   JvJ   \\\
 
-OPTION 1:
 Wordcloud-enhanced version of a search engine
 
-OPTION 2:
-Finance app based on stocks
+Scrape Google search
+
+http://edmundmartin.com/scraping-google-with-python/
+
+Input text results into machine learning algorithm
+
+Get visualized/formulized input from ML Algorithm (clusters)
+
+Visualize (WordCloud form)
