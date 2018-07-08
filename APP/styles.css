@@ -8,6 +8,12 @@ input::placeholder {
     font-style: italic;
 }
 
+text {
+    transform-origin: 0px 0px 0px;
+    display: block;
+    white-space: nowrap;
+}
+
 #searchbar {
     margin-left: 40%;
     margin-top: 20%;
