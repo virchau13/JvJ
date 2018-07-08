@@ -44,7 +44,5 @@ def scraper(querystring):
 
 	return filter_words_from_search(results)
 
-# if __name__ == "__main__":
-# 	print(scrape("sgcodecampus.com"))
-
-print(scraper("sgcodecampus"))
+if __name__ == "__main__":
+  print(scrape("sgcodecampus.com"))
