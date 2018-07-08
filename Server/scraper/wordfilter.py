@@ -3,6 +3,7 @@ from nltk.text import Text
 from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem import WordNetLemmatizer
+import re
 
 from searchscraper import scrape_google
 
@@ -11,6 +12,8 @@ tokenizer = RegexpTokenizer(r'\w+')
 lemmatizer = WordNetLemmatizer()
 
 words = set(nltk.corpus.words.words())
+
+regex = re.compile('[^a-zA-Z]')
 
 def filter_words_from_search(search_results):
     site_list = []
@@ -25,10 +28,8 @@ def filter_words_from_search(search_results):
         filteredtokens = [w for w in tokens if w not in nltk.corpus.stopwords.words('english')]
         filteredwords += [x for x in filteredtokens if (x not in punctuation and not x.isdigit())]
         lemmatized_words = []
-        print(filteredwords)
         for word in filteredwords:
-            word = "".join(w for w in nltk.wordpunct_tokenize(word) \
-                if w.lower() in words or not w.isalpha())
+            word = regex.sub('', word)
             word = lemmatizer.lemmatize(word)
             lemmatized_words.append(word)
 
@@ -41,9 +42,9 @@ def filter_words_from_search(search_results):
 def scraper(querystring):
 	results = scrape_google(querystring, 10, 'en')
 
-	filtered_results = filter_words_from_search(results)
+	return filter_words_from_search(results)
 
-	return dict(results_vocab = filtered_results.vocab())
+# if __name__ == "__main__":
+# 	print(scrape("sgcodecampus.com"))
 
-if __name__ == "__main__":
-	print(scrape("sgcodecampus.com"))
+print(scraper("sgcodecampus"))
