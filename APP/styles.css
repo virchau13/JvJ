@@ -1,0 +1,23 @@
+h1 {
+    font-family: Futura;
+    display: inline;
+}
+
+
+input::placeholder {
+    font-style: italic;
+}
+
+#searchbar {
+    margin-left: 40%;
+    margin-top: 20%;
+    width: 20%;
+    height: 20%;
+}
+
+#search {
+    width: 100%;
+}
+#searchbar>h1 {
+    margin-left: 25%;
+}
