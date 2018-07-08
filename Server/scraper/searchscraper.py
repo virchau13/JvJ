@@ -61,8 +61,7 @@ def scrape_google(search_term, number_results, language_code):
                 if (not text.parent.name in ['style', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(text.encode('utf-8')))):
                     text = text.replace('\n', '')
                     text = text.replace('\r', '')
-                    text = text.replace('\t', '')
-                    filtered_site += (text + " ").rstrip()        
+                    text = text.replace('\t', '')     
             results[site]['content'] = filtered_site
 
         return results
