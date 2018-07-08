@@ -13,7 +13,7 @@ lemmatizer = WordNetLemmatizer()
 
 stop_words = set(stopwords.words('english'))
 
-regex = re.compile('[^\w]')
+regex = re.compile('[^a-zA-Z]')
 
 def filter_words_from_search(search_results):
     site_list = []
