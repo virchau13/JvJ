@@ -13,7 +13,7 @@ lemmatizer = WordNetLemmatizer()
 
 stop_words = set(stopwords.words('english'))
 
-regex = re.compile('[^a-zA-Z]')
+regex = re.compile('[^\w]')
 
 def filter_words_from_search(search_results):
     site_list = []
@@ -29,10 +29,10 @@ def filter_words_from_search(search_results):
         filteredwords += [x for x in filteredtokens if (x not in punctuation and not x.isdigit())]
         lemmatized_words = []
         for word in filteredwords:
-            word = regex.sub('', word)
-            word = lemmatizer.lemmatize(word)
-            if word not in stop_words and word != "":
-                lemmatized_words.append(word)
+            filtered_word = regex.sub('', word)
+            lemmatized = lemmatizer.lemmatize(filtered_word)
+            if lemmatized not in stop_words and lemmatized != "":
+                lemmatized_words.append(lemmatized)
 
         site_list.append(Text(w.lower() for w in lemmatized_words))
         dict_list = []
