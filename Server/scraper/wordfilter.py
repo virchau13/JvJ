@@ -20,11 +20,12 @@ def filter_words_from_search(search_results):
     filteredtext = Text(w.lower() for w in filteredwords)
     return filteredtext
 
-results = scrape_google("sgcodecampus", 10, 'en')
+def scrape(querystring):
+	results = scrape_google(querystring, 10, 'en')
 
-filtered_results = filter_words_from_search(results)
+	filtered_results = filter_words_from_search(results)
 
-results_vocab = filtered_results.vocab()
+	return dict(results_vocab = filtered_results.vocab())
 
-print(filtered_results)
-print(dict(results_vocab))
+if __name__ == "__main__":
+	print(scrape("sgcodecampus.com"))
