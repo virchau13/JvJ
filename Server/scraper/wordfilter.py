@@ -17,7 +17,7 @@ regex = re.compile('[^a-zA-Z]')
 
 def filter_words_from_search(search_results):
     site_list = []
-    punctuation = [",",".",":",";","'","-","!",'"',"-","|","_"]
+    punctuation = [",",".",":",";","'","-","!",'"',"-","|","_",""]
 
     for page_num in range(len(search_results)):
         filteredwords = []
@@ -25,13 +25,14 @@ def filter_words_from_search(search_results):
         tokens = tokenizer.tokenize(page['title'])
         tokens += tokenizer.tokenize(page['description'])
         tokens += tokenizer.tokenize(page['content'])
-        filteredtokens = [w for w in tokens if w not in nltk.corpus.stopwords.words('english')]
+        filteredtokens = [w for w in tokens]
         filteredwords += [x for x in filteredtokens if (x not in punctuation and not x.isdigit())]
         lemmatized_words = []
         for word in filteredwords:
             word = regex.sub('', word)
             word = lemmatizer.lemmatize(word)
-            lemmatized_words.append(word)
+            if word not in nltk.corpus.stopwords.words('english') and word != "":
+                lemmatized_words.append(word)
 
         site_list.append(Text(w.lower() for w in lemmatized_words))
         dict_list = []
@@ -44,5 +45,7 @@ def scraper(querystring):
 
 	return filter_words_from_search(results)
 
-if __name__ == "__main__":
-  print(scrape("sgcodecampus.com"))
+# if __name__ == "__main__":
+#   print(scraper("sgcodecampus.com"))
+
+print(scraper("sgcodecampus"))
