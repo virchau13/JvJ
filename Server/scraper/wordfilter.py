@@ -29,12 +29,12 @@ def filter_words_from_search(search_results):
         filteredwords += [x for x in filteredtokens if (x not in punctuation and not x.isdigit())]
         lemmatized_words = []
         for word in filteredwords:
-            filtered_word = regex.sub('', word)
+            filtered_word = regex.sub('', word).lower()
             lemmatized = lemmatizer.lemmatize(filtered_word)
             if lemmatized not in stop_words and lemmatized != "":
                 lemmatized_words.append(lemmatized)
 
-        site_list.append(Text(w.lower() for w in lemmatized_words))
+        site_list.append(Text(lemmatized_words))
         dict_list = []
         for site in site_list:
             dict_list.append(dict(site.vocab()))
