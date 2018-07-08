@@ -11,7 +11,7 @@ tokenizer = RegexpTokenizer(r'\w+')
 
 lemmatizer = WordNetLemmatizer()
 
-words = set(nltk.corpus.words.words())
+stop_words = set(stopwords.words('english'))
 
 regex = re.compile('[^a-zA-Z]')
 
@@ -31,7 +31,7 @@ def filter_words_from_search(search_results):
         for word in filteredwords:
             word = regex.sub('', word)
             word = lemmatizer.lemmatize(word)
-            if word not in nltk.corpus.stopwords.words('english') and word != "":
+            if word not in stop_words and word != "":
                 lemmatized_words.append(word)
 
         site_list.append(Text(w.lower() for w in lemmatized_words))
