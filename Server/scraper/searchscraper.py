@@ -30,6 +30,8 @@ def parse_results(html, keyword):
             title = title.get_text()
             if description:
                 description = description.get_text()
+            else: 
+                description = ""
             if link != '#':
                 found_results.append({'keyword': keyword, 'rank': rank, 'title': title, 'description': description, 'link': link})
                 rank += 1
@@ -43,26 +45,30 @@ def visible(element):
     return True
 
 def scrape_google(search_term, number_results, language_code):
+    try:
+        keyword, html = fetch_results(search_term, number_results, language_code)
+        results = parse_results(html, keyword)
 
-    keyword, html = fetch_results(search_term, number_results, language_code)
-    results = parse_results(html, keyword)
-
-    for site in range(len(results)): 
-        response = requests.get(results[site]['link'], headers=USER_AGENT)
-        response.raise_for_status()
+        for site in range(len(results)): 
+            response = requests.get(results[site]['link'], headers=USER_AGENT)
+            response.raise_for_status()
         
-        soup = BeautifulSoup(response.text, 'html.parser')
-        filtered_site = ""
+            soup = BeautifulSoup(response.text, 'html.parser')
+            filtered_site = ""
         
-        site_content = soup.find_all(text=True)
-        for text in site_content:
-            if (not text.parent.name in ['style', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(text.encode('utf-8')))):
-                text = text.replace('\n', '')
-                text = text.replace('\r', '')
-                text = text.replace('\t', '')
-                filtered_site += (text + " ").rstrip()
+            site_content = soup.find_all(text=True)
+            for text in site_content:
+                if (not text.parent.name in ['style', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(text.encode('utf-8')))):
+                    text = text.replace('\n', '')
+                    text = text.replace('\r', '')
+                    text = text.replace('\t', '')
+                    filtered_site += (text + " ").rstrip()        
+            results[site]['content'] = filtered_site
 
-                
-        results[site]['content'] = filtered_site
-
-    return results
+        return results
+    except AssertionError:
+        raise Exception("Incorrect arguments parsed to function")
+    except requests.HTTPError:
+        raise Exception("You appear to have been blocked by Google")
+    except requests.RequestException:
+        raise Exception("Appears to be an issue with your connection")
