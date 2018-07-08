@@ -41,9 +41,7 @@ def filter_words_from_search(search_results):
 def scraper(querystring):
 	results = scrape_google(querystring, 10, 'en')
 
-	filtered_results = filter_words_from_search(results)
-
-	return dict(results_vocab = filtered_results.vocab())
+	return filter_words_from_search(results)
 
 if __name__ == "__main__":
 	print(scrape("sgcodecampus.com"))
