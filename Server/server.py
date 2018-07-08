@@ -10,7 +10,7 @@ CORS(app)
 
 # Import scraper
 sys.path.append(os.path.abspath("./scraper"))
-from wordfilter import scrape
+from wordfilter import scraper
 
 
 @app.route("/")
@@ -18,8 +18,8 @@ def root():
 	return "YOU SHALL NOT PASS!"
 
 @app.route("/scrape")
-def scraper():
-	return scrape("sgcodecampus.com")
+def scrape():
+	return jsonify(scraper(request.args.get("querystring")))
 
 if __name__ == "__main__":
-	app.run()
+	app.run(debug=True, port=5000)

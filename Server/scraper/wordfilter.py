@@ -20,7 +20,7 @@ def filter_words_from_search(search_results):
     filteredtext = Text(w.lower() for w in filteredwords)
     return filteredtext
 
-def scrape(querystring):
+def scraper(querystring):
 	results = scrape_google(querystring, 10, 'en')
 
 	filtered_results = filter_words_from_search(results)
