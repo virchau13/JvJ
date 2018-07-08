@@ -66,5 +66,3 @@ def scrape_google(search_term, number_results, language_code):
         results[site]['content'] = filtered_site
 
     return results
-
-print(scrape_google("sgcodecampus", 10, 'en'))
