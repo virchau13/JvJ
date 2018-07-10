@@ -1,8 +1,5 @@
 from bs4 import BeautifulSoup
-import cfscrape
-
 import re
-import urllib
 from urllib.request import urlopen
 import requests
 

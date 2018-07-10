@@ -41,5 +41,3 @@ def scraper_df(querystring):
 
 # if __name__ == "__main__":
 #   print(scraper("sgcodecampus.com"))
-
-print(scraper("lolxd"))
