@@ -8,12 +8,6 @@ input::placeholder {
     font-style: italic;
 }
 
-text {
-    transform-origin: 0px 0px 0px;
-    display: block;
-    white-space: nowrap;
-}
-
 #searchbar {
     margin-left: 40%;
     margin-top: 20%;
@@ -26,4 +20,9 @@ text {
 }
 #searchbar>h1 {
     margin-left: 25%;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
