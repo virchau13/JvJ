@@ -1,5 +1,8 @@
 from bs4 import BeautifulSoup
+import cfscrape
+
 import re
+import urllib
 from urllib.request import urlopen
 import requests
 
@@ -16,7 +19,6 @@ def fetch_results(search_term, number_results, language_code):
 
 def parse_results(html, keyword):
     soup = BeautifulSoup(html, 'html.parser')
-
     found_results = []
     rank = 1
     result_block = soup.find_all('div', attrs={'class': 'g'})
@@ -50,13 +52,18 @@ def scrape_google(search_term, number_results, language_code):
         results = parse_results(html, keyword)
 
         for site in range(len(results)): 
-            response = requests.get(results[site]['link'], headers=USER_AGENT, verify=False)
-            response.raise_for_status()
-        
-            soup = BeautifulSoup(response.text, 'html.parser')
+            try:
+                response = requests.get(results[site]['link'], headers=USER_AGENT, verify=False)
+                response.raise_for_status()
+                soup = BeautifulSoup(response.text, 'html.parser')
+                site_content = soup.find_all(text=True)
+                print(type(site_content))
+            except requests.HTTPError as err:
+                if (err.response.status_code == 503):
+                    site_content = ""
+
             filtered_site = ""
         
-            site_content = soup.find_all(text=True)
             for text in site_content:
                 if (not text.parent.name in ['style', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(text.encode('utf-8')))):
                     text = text.replace('\n', '')
