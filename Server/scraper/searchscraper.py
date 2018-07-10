@@ -1,8 +1,5 @@
 from bs4 import BeautifulSoup
-import cfscrape
-
 import re
-import urllib
 from urllib.request import urlopen
 import requests
 
@@ -53,11 +50,10 @@ def scrape_google(search_term, number_results, language_code):
 
         for site in range(len(results)): 
             try:
-                response = requests.get(results[site]['link'], headers=USER_AGENT, verify=False)
+                response = requests.get(results[site]['link'], headers=USER_AGENT)
                 response.raise_for_status()
                 soup = BeautifulSoup(response.text, 'html.parser')
                 site_content = soup.find_all(text=True)
-                print(type(site_content))
             except requests.HTTPError as err:
                 if (err.response.status_code == 503):
                     site_content = ""
