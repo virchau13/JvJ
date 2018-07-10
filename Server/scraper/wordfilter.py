@@ -22,9 +22,7 @@ def filter_words_from_search(search_results):
             filteredwords = [x for x in [w for w in tokens] if (x not in string.punctuation and not x.isdigit())]
             lemmatized_words = [lemmatize(w.lower()) for w in filteredwords if (lemmatize(w.lower()) not in stop_words and w != "")]
             site_list.append(Text(lemmatized_words))
-        dict_list = []
-        for site in site_list:
-            dict_list.append(dict(site.vocab()))
+        dict_list = [dict(site.vocab()) for site in site_list]
         return dict_list
     else:
         return {'error': 500}
@@ -35,9 +33,9 @@ def scraper(querystring):
 	return filter_words_from_search(results)
 
 def scraper_df(querystring):
-    results = filter_words_from_search(scrape_google(querystring, 10, 'en'))
-    
-    return pd.DataFrame(results).fillna(0)
+    return pd.DataFrame(scraper(querystring)).fillna(0)
 
 # if __name__ == "__main__":
 #   print(scraper("sgcodecampus.com"))
+
+print(scraper("lolxd"))
