@@ -5,6 +5,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem import WordNetLemmatizer
 import re
+import pandas as pd
 
 from searchscraper import scrape_google
 
@@ -32,6 +33,11 @@ def scraper(querystring):
 	results = scrape_google(querystring, 10, 'en')
 
 	return filter_words_from_search(results)
+
+def scraper_df(querystring):
+    results = filter_words_from_search(scrape_google(querystring, 10, 'en'))
+    
+    return pd.DataFrame(results).fillna(0)
 
 # if __name__ == "__main__":
 #   print(scraper("sgcodecampus.com"))
