@@ -50,7 +50,7 @@ def scrape_google(search_term, number_results, language_code):
         results = parse_results(html, keyword)
 
         for site in range(len(results)): 
-            response = requests.get(results[site]['link'], headers=USER_AGENT)
+            response = requests.get(results[site]['link'], headers=USER_AGENT, verify=False)
             response.raise_for_status()
         
             soup = BeautifulSoup(response.text, 'html.parser')
