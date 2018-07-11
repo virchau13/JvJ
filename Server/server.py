@@ -22,7 +22,10 @@ def root():
 
 @app.route("/scrape")
 def scrape():
-	return jsonify({"tfidf" : tfidf(scraper(request.args.get("querystring")))})
+	scraper_values = scraper(request.args.get("querystring"))
+	tfidf_values = tfidf(scraper_values)
+	
+	return jsonify({"tfidf" : tfidf_values})
 
 # Running the server
 if __name__ == "__main__":
