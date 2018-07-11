@@ -46,7 +46,6 @@ def scraper(querystring):
 def scraper_df(querystring):
     return pd.DataFrame.from_dict(scraper(querystring), orient="index").fillna(0)
 
-# if __name__ == "__main__":
-#   print(scraper("sgcodecampus.com"))
-
-print(scraper_df("lolxd"))
+if __name__ == "__main__":
+    print(scraper("sgcodecampus.com"))
+    print(scraper("lolxd"))
