@@ -37,11 +37,10 @@ function search(e){
         margin-left: 30%;
         animation: spin 2s linear infinite;"></div><br><p> Loading search results... </p>`
     }
-    cloud();
         // GET data from server for rendering
         fetch("http://" + ipaddr + ":5000/scrape?querystring=" + e.target.value)
         .then((res) => res.ok ? res.json() : fetcherror('ERROR fetching from 192.168.1.81:5000/?query=' + e.target.value + '. HTTP Response code is ' + res.status))
-        .then((data) => {document.getElementById('root-container').removeChild(document.getElementById('searchbar')); console.log(data); tags = Object.entries(data.tfidf).sort((a,b)=>b[1]-a[1]).slice(0, 100 + 1).map(e=>{return{'key': e[0], 'value': e[1]}}); update();
+        .then((data) => {topbar.appendChild(searchtopbar); document.getElementById('root-container').removeChild(document.getElementById('searchbar')); console.log(data); cloud(Object.entries(data.tfidf).sort((a,b)=>b[1]-a[1]).slice(0, 100 + 1).map(e=>{return{'key': e[0], 'value': e[1]}}));
         
         });
     }
@@ -53,8 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	searchbar.addEventListener("keypress", search)
 })
 
-function cloud(){
-var tags;
+function cloud(tags){
+
 
 var fill = d3.scale.category20b();
 
@@ -138,4 +137,6 @@ function update() {
     }
     layout.stop().words(tags).start();
 }
+
+update();
 }
