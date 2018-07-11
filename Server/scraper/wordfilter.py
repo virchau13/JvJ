@@ -6,6 +6,7 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.stem import WordNetLemmatizer
 import re
 import pandas as pd
+import time
 
 from searchscraper import scrape_google
 
@@ -16,6 +17,7 @@ stop_words = set(stopwords.words('english'))
 
 #Take title, description, content of search results and outputs them as a dictionary per site.
 def filter_words_from_search(search_results):
+    t0 = time.time()
     if (len(search_results) > 0):
         site_list = []
         for page_num in range(len(search_results)):
@@ -25,6 +27,8 @@ def filter_words_from_search(search_results):
             lemmatized_words = [lemmatize(w.lower()) for w in filteredwords if (lemmatize(w.lower()) not in stop_words and w != "")]
             site_list.append(Text(lemmatized_words))
         dict_list = [dict(site.vocab()) for site in site_list]
+        t1 = time.time()
+        print("Filter Time: " + str(t1 - t0))
         return dict_list
     else:
         return {'error': 500}
@@ -42,4 +46,4 @@ def scraper_df(querystring):
 # if __name__ == "__main__":
 #   print(scraper("sgcodecampus.com"))
 
-#print(scraper("lolxd"))
+print(scraper("lolxd"))
