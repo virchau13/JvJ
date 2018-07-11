@@ -15,7 +15,7 @@ def KMeans_Generator(clusters, dataframe):
     km = KMeans(n_clusters=3)
     km.fit(mat)
     
-    return km.predict(mat)
+    return km
 
 if __name__ == "__main__":
-	print(KMeans_Generator(3, scraper_df("sgcodecampus")))
+	print(KMeans_Generator(3, scraper_df("sgcodecampus")).labels_)
