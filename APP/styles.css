@@ -3,6 +3,9 @@ h1 {
     display: inline;
 }
 
+body {
+    font-family: Roboto;
+}
 
 input::placeholder {
     font-style: italic;
@@ -28,7 +31,21 @@ input::placeholder {
 }
 
 #topbar {
-    background-color: #AAAAAA;
+    background-color: #273043;
     height: 50px;
     width: 100%;
+}
+
+#topbar>button{
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+#searchtopbar {
+    height: 30px;
+    width: 20%;
+    margin-top: 10px;
+    position: absolute;
+    left: 79%;
+    border: 1px solid black;
 }
