@@ -53,14 +53,15 @@ def scrape_google(search_term, number_results, language_code):
 
         #Checking if site is accessible (CloudFlare Protection)
         for site in range(len(results)): 
+            t2 = time.time()
             try:
-                response = requests.get(results[site]['link'], headers=USER_AGENT)
+                response = requests.get(results[site]['link'], headers=USER_AGENT, verify=False)
                 response.raise_for_status()
                 soup = BeautifulSoup(response.text, 'html.parser')
                 site_content = soup.find_all(text=True)
             except requests.HTTPError as err:
-                if (err.response.status_code == 503):
-                    site_content = ""
+                # if (err.response.status_code == 503):
+                site_content = ""
 
             filtered_site = ""
         #Taking all data from  website and removing \ symbols (newline, etc)
@@ -70,6 +71,8 @@ def scrape_google(search_term, number_results, language_code):
                     text = text.replace('\r', '')
                     text = text.replace('\t', '')     
             results[site]['content'] = filtered_site
+            t3 = time.time()
+            print("Scrape Time: " + str(t3 - t2) + " Rank: " + str(results[site]['rank']))
         t1 = time.time()
         print("Scrape Time: " + str(t1 - t0))
         return results

@@ -38,14 +38,14 @@ def filter_words_from_search(search_results):
 
 #Compiles search and filter into one command
 def scraper(querystring):
-	results = scrape_google(querystring, 10, 'en')
+	results = scrape_google(querystring, 50, 'en')
 
 	return filter_words_from_search(results)
 
 #Outputs as a Panda DataFrame
 def scraper_df(querystring):
-    return pd.DataFrame.from_dict(scraper(querystring), orient="index").fillna(0)
+    results = pd.DataFrame.from_dict(scraper(querystring), orient="index").fillna(0).reset_index()
+    results.columns = ['Site' if x=='index' else x for x in results.columns]
+    return results
 
-if __name__ == "__main__":
-    print(scraper("sgcodecampus.com"))
-    print(scraper("lolxd"))
+#if __name__ == "__main__":
