@@ -9,10 +9,12 @@ import pandas as pd
 
 from searchscraper import scrape_google
 
+#Creating tools for filtering
 tokenizer = RegexpTokenizer(r'[a-zA-Z]+')
 lemmatize = WordNetLemmatizer().lemmatize
 stop_words = set(stopwords.words('english'))
 
+#Take title, description, content of search results and outputs them as a dictionary per site.
 def filter_words_from_search(search_results):
     if (len(search_results) > 0):
         site_list = []
@@ -27,11 +29,13 @@ def filter_words_from_search(search_results):
     else:
         return {'error': 500}
 
+#Compiles search and filter into one command
 def scraper(querystring):
 	results = scrape_google(querystring, 10, 'en')
 
 	return filter_words_from_search(results)
 
+#Outputs as a Panda DataFrame
 def scraper_df(querystring):
     return pd.DataFrame(scraper(querystring)).fillna(0)
 
