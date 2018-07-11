@@ -5,6 +5,7 @@ import requests
 
 USER_AGENT = {'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'}
 
+#Fetching results from google
 def fetch_results(search_term, number_results, language_code):
     escaped_search_term = search_term.replace(' ', '+')
 
@@ -14,6 +15,7 @@ def fetch_results(search_term, number_results, language_code):
 
     return search_term, response.text
 
+#Extracting title, description and link of sites found on the google site
 def parse_results(html, keyword):
     soup = BeautifulSoup(html, 'html.parser')
     found_results = []
@@ -36,18 +38,13 @@ def parse_results(html, keyword):
                 rank += 1
     return found_results
 
-def visible(element):
-    if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
-        return False
-    elif re.match('<!--.*-->', str(element.encode('utf-8'))):
-        return False
-    return True
-
+#Scraping websites from google search for data
 def scrape_google(search_term, number_results, language_code):
     try:
         keyword, html = fetch_results(search_term, number_results, language_code)
         results = parse_results(html, keyword)
 
+        #Checking if site is accessible (CloudFlare Protection)
         for site in range(len(results)): 
             try:
                 response = requests.get(results[site]['link'], headers=USER_AGENT)
@@ -59,15 +56,15 @@ def scrape_google(search_term, number_results, language_code):
                     site_content = ""
 
             filtered_site = ""
-        
+        #Taking all data from  website and removing \ symbols (newline, etc)
             for text in site_content:
                 if (not text.parent.name in ['style', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(text.encode('utf-8')))):
                     text = text.replace('\n', '')
                     text = text.replace('\r', '')
                     text = text.replace('\t', '')     
             results[site]['content'] = filtered_site
-
         return results
+    #Error Catching
     except AssertionError:
         raise Exception("Incorrect arguments parsed to function")
     except requests.HTTPError:
