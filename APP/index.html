@@ -10,15 +10,17 @@
 	</head>
 	<body>
 		<div id="topbar">
-			<a href="file:///Users/VirChaudhury/Desktop/hackathon/JvJ/APP/index.html">Main</a>
+			<button class="btn" onclick="window.location.reload()">Main Page</button>
+			<button class="btn" onclick="about()">About</button>
 		</div>
-		<div id="searchbar">
-			<h1>Google</h1><br><h1 style="color: red;">v2.0</h1><br>
-			<input type="text" id="search" placeholder="Enter your search term here...">
-		</div>
-		<div id="cloud-container">
-			
-		</div>
+			<div id="root-container">
+				<div id="searchbar">
+					<h1>Google</h1><br><h1 style="color: red;">v2.0</h1><br>
+					<input type="text" id="search" placeholder="Enter your search term here...">
+				</div>
+				<div id="cloud-container">	
+				</div>
+			</div>
 	</body>
 	<script src="script.js"></script>
 </html>
