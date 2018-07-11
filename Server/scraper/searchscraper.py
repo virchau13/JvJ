@@ -2,27 +2,31 @@ from bs4 import BeautifulSoup
 import re
 from urllib.request import urlopen
 import requests
+import time
 
 USER_AGENT = {'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'}
 
 #Fetching results from google
 def fetch_results(search_term, number_results, language_code):
+    t0 = time.time()
     escaped_search_term = search_term.replace(' ', '+')
 
     google_url = 'https://www.google.com/search?q={}&num={}&hl={}'.format(escaped_search_term, number_results, language_code)
     response = requests.get(google_url, headers=USER_AGENT)
     response.raise_for_status()
+    t1 = time.time()
+    print("Fetch Time: " + str(t1 - t0))
 
     return search_term, response.text
 
 #Extracting title, description and link of sites found on the google site
 def parse_results(html, keyword):
+    t0 = time.time()
     soup = BeautifulSoup(html, 'html.parser')
     found_results = []
     rank = 1
     result_block = soup.find_all('div', attrs={'class': 'g'})
     for result in result_block:
-
         link = result.find('a', href=True)
         title = result.find('h3', attrs={'class': 'r'})
         description = result.find('span', attrs={'class': 'st'})
@@ -36,10 +40,13 @@ def parse_results(html, keyword):
             if link != '#':
                 found_results.append({'keyword': keyword, 'rank': rank, 'title': title, 'description': description, 'link': link})
                 rank += 1
+    t1 = time.time()
+    print("Parse Time: " + str(t1 - t0))
     return found_results
 
 #Scraping websites from google search for data
 def scrape_google(search_term, number_results, language_code):
+    t0 = time.time()
     try:
         keyword, html = fetch_results(search_term, number_results, language_code)
         results = parse_results(html, keyword)
@@ -63,6 +70,8 @@ def scrape_google(search_term, number_results, language_code):
                     text = text.replace('\r', '')
                     text = text.replace('\t', '')     
             results[site]['content'] = filtered_site
+        t1 = time.time()
+        print("Scrape Time: " + str(t1 - t0))
         return results
     #Error Catching
     except AssertionError:
