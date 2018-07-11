@@ -27,9 +27,12 @@ def filter_words_from_search(search_results):
             lemmatized_words = [lemmatize(w.lower()) for w in filteredwords if (lemmatize(w.lower()) not in stop_words and w != "")]
             site_list.append(Text(lemmatized_words))
         dict_list = [dict(site.vocab()) for site in site_list]
+        site_dict = {}
+        for page_num in range(len(search_results)):
+            site_dict[search_results[page_num]['link']] = dict_list[page_num]
         t1 = time.time()
         print("Filter Time: " + str(t1 - t0))
-        return dict_list
+        return site_dict
     else:
         return {'error': 500}
 
