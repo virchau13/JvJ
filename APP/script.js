@@ -1,4 +1,4 @@
-let ipaddr = '192.168.1.81';
+let ipaddr = '0.0.0.0';
 
 function fetcherror(str){
 	// TODO: add UI of error
