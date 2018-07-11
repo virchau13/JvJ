@@ -10,7 +10,7 @@ CORS(app)
 
 # Import scraper
 sys.path.append(os.path.abspath("./scraper"))
-from wordfilter import scraper
+from wordfilter import scraper, sraper_df
 
 # Import tfidf
 from tfidf import tfidf

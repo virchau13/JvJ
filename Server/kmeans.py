@@ -17,4 +17,5 @@ def KMeans_Generator(clusters, dataframe):
     
     return km.predict(mat)
 
-print(KMeans_Generator(3, scraper_df("sgcodecampus")))
+if __name__ == "__main__":
+	print(KMeans_Generator(3, scraper_df("sgcodecampus")))
