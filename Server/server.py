@@ -25,7 +25,6 @@ def root():
 def scrape():
 	tfidf_values = tfidf(scraper(request.args.get("querystring")))
 	tfidf_pd_values = tfidf_df(scraper_df(request.args.get("querystring")))
-	print(tfidf_pd_values)
 	return jsonify({
 		"tfidf" : tfidf_values,
 		"specifics" : tfidf_pd_values

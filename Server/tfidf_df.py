@@ -4,10 +4,18 @@ import math
 import numpy as np
 import pandas as pd
 
+from kmeans import KMeans_Generator
+
 def tfidf_df(sameData):
+	kmeans_stuff = KMeans_Generator(3, sameData)
 	collected = {}
+	count = 0
 	for i in sameData.index:
-		collected[i] = {}
+		count += 1
+		collected[i]["data"] = {}
 		for j in sameData.columns:
-			collected[i][j] = int(sameData.loc[i, j])
+			if int(sameData.loc[i, j]):
+				collected[i]["data"][j] = int(sameData.loc[i, j])
+		collected[i]["cluster"] = kmeans_stuff[i]
+		collected[i]["initialRanking"] = count
 	return collected
