@@ -29,16 +29,3 @@ def tfidf(dict_dict):
 	for i in tf_val.keys():
 		tfidf_values[i] = tf_val[i] * idf_val[i]
 	return tfidf_values
-
-if __name__ == "__main__":
-	thingy = {
-		"abc" : {
-			"hi" : 1,
-			"bye" : 2,
-		},
-		"xyz" : {
-			"hi" : 3,
-			"mine" : 4,
-		}
-	}
-	print(tfidf(thingy))
