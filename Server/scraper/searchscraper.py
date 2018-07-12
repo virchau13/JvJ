@@ -3,13 +3,21 @@ import re
 from urllib.request import urlopen
 import requests
 import time
+import codecs
 
 USER_AGENT = {'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'}
+
+google_symbols = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', ']', '^', '_', '`', '~', '\\']
+symbol_dict = {}
+for symbol_num in range(len(google_symbols)):
+    symbol_dict[google_symbols[symbol_num]] = '%' + str(codecs.encode(google_symbols[symbol_num].encode('ascii'), 'hex')).replace('b', '').replace("'", '')
 
 #Fetching results from google
 def fetch_results(search_term, number_results, language_code):
     t0 = time.time() 
-    escaped_search_term = search_term.replace('+', '%2B').replace(' ', '+').replace('&', '%26')
+    escaped_search_term = search_term
+    for symbol, replacement in symbol_dict.items():
+        escaped_search_term = escaped_search_term.replace(symbol, replacement)
 
     google_url = 'https://www.google.com/search?q={}&num={}&hl={}'.format(escaped_search_term, number_results, language_code)
     response = requests.get(google_url, headers=USER_AGENT)
