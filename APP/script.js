@@ -80,6 +80,8 @@ var svg = d3.select("#cloud-container").append("svg")
 
 var vis = svg.append("g").attr("transform", "translate(" + [w >> 1, h >> 1] + ")");
 
+window.onresize = function(){ update(); }
+
 function draw(data, bounds) {
     var w = window.innerWidth,
         h = window.innerHeight;
