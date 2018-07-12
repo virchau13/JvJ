@@ -37,16 +37,16 @@ def filter_words_from_search(search_results):
         return {'error': 404}
 
 #Compiles search and filter into one command
-def scraper(querystring):
-	results = scrape_google(querystring, 20, 'en')
+def scraper(querystring, num_results):
+	results = scrape_google(querystring, num_results, 'en')
 
 	return filter_words_from_search(results)
 
 #Outputs as a Panda DataFrame
-def scraper_df(querystring):
-    results = pd.DataFrame.from_dict(scraper(querystring), orient="index").fillna(0)
+def scraper_df(querystring, num_results):
+    results = pd.DataFrame.from_dict(scraper(querystring, num_results), orient="index").fillna(0)
     #results.columns = ['Site' if x=='index' else x for x in results.columns]
     return results
 
 if __name__ == "__main__":
-    print(scraper("#"))
+    print(scraper("yourmumgay", 10))
