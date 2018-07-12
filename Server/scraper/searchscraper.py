@@ -8,8 +8,8 @@ USER_AGENT = {'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) Appl
 
 #Fetching results from google
 def fetch_results(search_term, number_results, language_code):
-    t0 = time.time()
-    escaped_search_term = search_term.replace(' ', '+').replace("&", "%26")
+    t0 = time.time() 
+    escaped_search_term = search_term.replace('+', '%2B').replace(' ', '+').replace('&', '%26')
 
     google_url = 'https://www.google.com/search?q={}&num={}&hl={}'.format(escaped_search_term, number_results, language_code)
     response = requests.get(google_url, headers=USER_AGENT)

@@ -22,3 +22,7 @@ def KMeans_Generator(clusters, dataframe):
 
 if __name__ == "__main__":
 	print(KMeans_Generator(3, scraper_df("sgcodecampus")))
+
+
+
+    
