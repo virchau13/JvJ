@@ -18,5 +18,4 @@ def tfidf_df(sameData):
 			if int(sameData.loc[i, j]):
 				collected[i]["data"][j] = int(sameData.loc[i, j])
 		collected[i]["cluster"] = int(kmeans_stuff[i])
-		collected[i]["initialRanking"] = count
 	return collected
