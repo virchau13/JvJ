@@ -38,7 +38,7 @@ def filter_words_from_search(search_results):
 
 #Compiles search and filter into one command
 def scraper(querystring):
-	results = scrape_google(querystring, 50, 'en')
+	results = scrape_google(querystring, 20, 'en')
 
 	return filter_words_from_search(results)
 
@@ -49,4 +49,4 @@ def scraper_df(querystring):
     return results
 
 if __name__ == "__main__":
-    print(scraper("+"))
+    print(scraper("sand"))

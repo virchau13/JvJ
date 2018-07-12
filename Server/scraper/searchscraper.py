@@ -65,11 +65,9 @@ def scrape_google(search_term, number_results, language_code):
 
             filtered_site = ""
         #Taking all data from  website and removing \ symbols (newline, etc)
-            for text in site_content:
-                if (not text.parent.name in ['style', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(text.encode('utf-8')))):
-                    text = text.replace('\n', '')
-                    text = text.replace('\r', '')
-                    text = text.replace('\t', '')     
+            # for text in site_content:
+            #     if (not text.parent.name in ['style', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(text.encode('utf-8')))):
+            #         text = text.replace('\n', '').replace('\r', '').replace('\t', '')  
             results[site]['content'] = filtered_site
             t3 = time.time()
             print("Scrape Time: " + str(t3 - t2) + " Rank: " + str(results[site]['rank']))
