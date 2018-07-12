@@ -12,10 +12,11 @@ def tfidf_df(sameData):
 	count = 0
 	for i in sameData.index:
 		count += 1
+		collected[i] = {}
 		collected[i]["data"] = {}
 		for j in sameData.columns:
 			if int(sameData.loc[i, j]):
 				collected[i]["data"][j] = int(sameData.loc[i, j])
-		collected[i]["cluster"] = kmeans_stuff[i]
+		collected[i]["cluster"] = int(kmeans_stuff[i])
 		collected[i]["initialRanking"] = count
 	return collected
