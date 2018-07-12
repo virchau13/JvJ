@@ -38,7 +38,7 @@ def parse_results(html, keyword):
             else: 
                 description = ""
             if link != '#':
-                found_results.append({'keyword': keyword, 'rank': rank, 'title': title, 'description': description, 'link': link})
+                found_results.append({'keyword': keyword, 'rank': rank, 'title': title, 'description': description, 'link': link.replace("/imgres?imgurl=", "")})
                 rank += 1
     t1 = time.time()
     print("Parse Time: " + str(t1 - t0))

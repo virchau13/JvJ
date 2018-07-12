@@ -12,10 +12,10 @@ from sklearn.cluster import KMeans
 
 def KMeans_Generator(clusters, dataframe):
     mat = dataframe.values
-    km = KMeans(n_clusters=3)
+    km = KMeans(n_clusters=5)
     km.fit(mat)
     
     return km
 
 if __name__ == "__main__":
-	print(KMeans_Generator(3, scraper_df("sgcodecampus")).labels_)
+	print(KMeans_Generator(3, scraper_df("sgcodecampus")).label_)

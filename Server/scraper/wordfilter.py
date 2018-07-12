@@ -44,14 +44,9 @@ def scraper(querystring):
 
 #Outputs as a Panda DataFrame
 def scraper_df(querystring):
-    results = pd.DataFrame.from_dict(scraper(querystring), orient="index").fillna(0).reset_index()
-    results.columns = ['Site' if x=='index' else x for x in results.columns]
+    results = pd.DataFrame.from_dict(scraper(querystring), orient="index").fillna(0)
+    #results.columns = ['Site' if x=='index' else x for x in results.columns]
     return results
 
-<<<<<<< HEAD
-#if __name__ == "__main__":
-=======
 if __name__ == "__main__":
-    print(scraper("sgcodecampus.com"))
-    print(scraper_df("lolxd"))
->>>>>>> ebca0b7abf807bbfd04ed121d5f2bd3cbee15c7d
+    print(scraper("cavity"))
