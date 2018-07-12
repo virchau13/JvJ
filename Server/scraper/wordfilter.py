@@ -49,4 +49,4 @@ def scraper_df(querystring):
     return results
 
 if __name__ == "__main__":
-    print(scraper("sand"))
+    print(scraper("#"))
