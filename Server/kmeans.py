@@ -13,7 +13,7 @@ from sklearn.cluster import KMeans
 def KMeans_Generator(clusters, dataframe):
     mat = dataframe.values
     # df = dataframe
-    km = KMeans(n_clusters=5)
+    km = KMeans(n_clusters=clusters)
     km.fit(mat)
     # df['cluster'] = km.fit_predict(dataframe)
     # df = df.sort_values("cluster")
