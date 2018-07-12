@@ -72,12 +72,18 @@ def scrape_google(search_term, number_results, language_code):
                 site_content = ""
 
             filtered_site = ""
+            urls = []
+            for url in soup.find_all('a', attrs={'href': re.compile("^http://")}):
+                urls.append(url.get('href'))
+            
         #Taking all data from  website and removing \ symbols (newline, etc)
             for text in site_content:
                 if (not text.parent.name in ['style', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(text.encode('utf-8')))):
                     text = text.replace('\n', '').replace('\r', '').replace('\t', '')  
                     filtered_site += text + " "
             results[site]['content'] = filtered_site
+            results[site]['urls'] = urls
+
             t3 = time.time()
             print("Scrape Time: " + str(t3 - t2) + " Rank: " + str(results[site]['rank']))
         t1 = time.time()
@@ -90,3 +96,6 @@ def scrape_google(search_term, number_results, language_code):
         raise Exception("You appear to have been blocked by Google")
     except requests.RequestException:
         raise Exception("Appears to be an issue with your connection")
+
+if __name__ == "__main__":
+    print(scrape_google("test", 5, 'en')[0]['urls'])

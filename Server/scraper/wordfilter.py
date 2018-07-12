@@ -36,6 +36,17 @@ def filter_words_from_search(search_results):
     else:
         return {'error': 404}
 
+def get_scraped_urls(search_results):
+    url_dict = {}
+    if (len(search_results) > 0):
+        for page_num in range(len(search_results)):
+            page = search_results[page_num]
+            urls = page['urls']
+            url_dict[page['link']] = urls
+    else:
+        return {'error': 404}
+    return url_dict
+
 #Compiles search and filter into one command
 def scraper(querystring, num_results):
 	results = scrape_google(querystring, num_results, 'en')
@@ -48,5 +59,10 @@ def scraper_df(querystring, num_results):
     #results.columns = ['Site' if x=='index' else x for x in results.columns]
     return results
 
+def scrape_urls(querystring, num_results):
+    results = scrape_google(querystring, num_results, 'en')
+
+    return get_scraped_urls(results)
+
 if __name__ == "__main__":
-    print(scraper("yourmumgay", 10))
+    print(scrape_urls('sgcodecampus', 5))
