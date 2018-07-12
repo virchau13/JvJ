@@ -12,10 +12,17 @@ from sklearn.cluster import KMeans
 
 def KMeans_Generator(clusters, dataframe):
     mat = dataframe.values
+    df = dataframe
     km = KMeans(n_clusters=5)
     km.fit(mat)
-    
-    return km
+    df['cluster'] = km.fit_predict(dataframe)
+    df = df.sort_values("cluster")
+
+    return df
 
 if __name__ == "__main__":
-	print(KMeans_Generator(3, scraper_df("sgcodecampus")).label_)
+	print(KMeans_Generator(3, scraper_df("sgcodecampus")))
+
+
+
+    

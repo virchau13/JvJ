@@ -34,7 +34,7 @@ def filter_words_from_search(search_results):
         print("Filter Time: " + str(t1 - t0))
         return site_dict
     else:
-        return {'error': 500}
+        return {'error': 404}
 
 #Compiles search and filter into one command
 def scraper(querystring):
@@ -49,4 +49,4 @@ def scraper_df(querystring):
     return results
 
 if __name__ == "__main__":
-    print(scraper("&lol=xd"))
+    print(scraper("+"))
