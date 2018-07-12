@@ -14,6 +14,7 @@ from wordfilter import scraper, scraper_df
 
 # Import tfidf
 from tfidf import tfidf
+from tfidf_df import tfidf_df
 
 # Routes
 @app.route("/")
@@ -22,10 +23,13 @@ def root():
 
 @app.route("/scrape")
 def scrape():
-	scraper_values = scraper(request.args.get("querystring"))
-	tfidf_values = tfidf(scraper_values)
-	
-	return jsonify({"tfidf" : tfidf_values})
+	tfidf_values = tfidf(scraper(request.args.get("querystring")))
+	tfidf_pd_values = tfidf_df(scraper_df(request.args.get("querystring")))
+	print(tfidf_pd_values)
+	return jsonify({
+		"tfidf" : tfidf_values,
+		"specifics" : tfidf_pd_values
+	})
 
 # Running the server
 if __name__ == "__main__":
