@@ -23,3 +23,8 @@ class Graph():
 		for i in self.graph.keys():
 			del self.graph[i][name]
 
+	def importance(self, name):
+		counter = 0
+		for i in self.graph[name].keys():
+			counter += i
+		return counter

@@ -10,11 +10,14 @@ CORS(app)
 
 # Import scraper
 sys.path.append(os.path.abspath("./scraper"))
-from wordfilter import scraper, scraper_df
+from wordfilter import scraper, scraper_df, scrape_urls
 
 # Import tfidf
 from tfidf import tfidf
 from tfidf_df import tfidf_df
+
+# Import url sorter
+from url_sorter import sort_urls
 
 # Routes
 @app.route("/")
@@ -23,6 +26,7 @@ def root():
 
 @app.route("/scrape")
 def scrape():
+	sort_urls(scrape_urls(request.args.get("querystring"), 25))
 	scraper_values = scraper_df(request.args.get("querystring"), 25)
 	tfidf_values = tfidf(scraper_values)
 	tfidf_pd_values = tfidf_df(scraper_values)
