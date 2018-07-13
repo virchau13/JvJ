@@ -68,11 +68,29 @@ def fetch_results(search_term, number_results, language_code):
 #Scraping websites from google search for data
 def scrape_google(search_term, number_results, language_code):
     t0 = time.time()
+<<<<<<< HEAD
     results = fetch_results(search_term, number_results, language_code)
     t = time.time()
     response = grequests.map([grequests.get(u) for u in [x['url'] for x in results]])
     print('Website fetch time total:', time.time()-t, 'seconds')
     contents = [[x.replace('\n', '').replace('\t', '').replace('\r', '') for x in tex if not x.parent.name in ['style', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(x.encode('utf-8')))] if tex else [] for tex in [BeautifulSoup(res.text, 'html.parser').find_all(text=True) if res else None for res in response]]
+=======
+    responses = grequests.map([grequests.get(u) for u in [x['link'] for x in results]])
+    print('Website fetch time total:', time.time()-t0, 'seconds')
+    soup_responses = [BeautifulSoup(res.text, 'html.parser') for res in responses]
+    #Finding Span and taking the info (so not to remove it completely)
+    # for response_num in range(len(soup_responses)):
+    #     response = soup_responses[response_num]
+    #     span_elements = [element.replace('\n', '').replace('\t', '').replace('\r', '') for element in [tag.text for tag in response.find_all('span')] if element.replace('\n', '').replace('\t', '').replace('\r', '') != '']
+    #     #print(span_elements)
+    #     results[response_num]['content'] = ' '.join(span_elements)
+    # for soup in soup_responses:
+    #     for span_tag in soup.findAll('span'):
+    #         span_tag.unwrap()
+    soup_responses = [res.find_all(text=True) for res in soup_responses]
+    contents = [[x.replace('\n', '').replace('\t', '').replace('\r', '') for x in tex if not x.parent.name in ['style', 'script', '[document]', 'head', 'title', 'span'] and not re.match('<!--.*-->', str(x.encode('utf-8')))] if tex else [] for tex in soup_responses]
+    #results = [s.decompose() for s in soup_responses]
+>>>>>>> master
     for i in range(len(results)):
         results[i]['content'] = ' '.join(contents[i])
         results[i]['description'] = results[i].pop('snippet')
@@ -83,4 +101,4 @@ def scrape_google(search_term, number_results, language_code):
     return results
 
 if __name__ == "__main__":
-    print(scrape_google('flugr', 5, 'en'))
+    print(scrape_google('minecraft', 25, 'en'))
