@@ -70,9 +70,9 @@ def scrape_google(search_term, number_results, language_code):
     t0 = time.time()
     results = fetch_results(search_term, number_results, language_code)
     t = time.time()
-    response = grequests.map([grequests.get(u) for u in [x['url'] for x in results]])
+    response = grequests.map([grequests.get(u, timeout=0.5) for u in [x['url'] for x in results]])
     print('Website fetch time total:', time.time()-t, 'seconds')
-    soup_list = [BeautifulSoup(res.text, 'html.parser') for res in response] #.find_all(text=True)
+    soup_list = [BeautifulSoup(res.text, 'html.parser') if res != None else BeautifulSoup("", 'html.parser') for res in response]
     for soup in soup_list:
         for span in soup.find_all('span'):
             span.decompose()
@@ -89,4 +89,4 @@ def scrape_google(search_term, number_results, language_code):
     return results
 
 if __name__ == "__main__":
-    print(scrape_google('minecraft', 25, 'en'))
+    print(scrape_google('xd', 15, 'en'))
