@@ -40,15 +40,27 @@ function search(e){
         // GET data from server for rendering
         fetch("http://" + ipaddr + ":5000/scrape?querystring=" + e.target.value)
         .then((res) => res.ok ? res.json() : fetcherror('ERROR fetching from 192.168.1.81:5000/?query=' + e.target.value + '. HTTP Response code is ' + res.status))
-        .then((data) => {topbar.appendChild(searchtopbar); document.getElementById('root-container').removeChild(document.getElementById('searchbar')); console.log(data); cloud(Object.entries(data.tfidf).sort((a,b)=>b[1]-a[1]).slice(0, 100 + 1).map(e=>{return{'key': e[0], 'value': e[1]}}));
+        .then((data) => {topbar.appendChild(searchtopbar); window.data = data; document.getElementById('root-container').removeChild(document.getElementById('searchbar')); console.log(data); website_display(data.specifics); cloud(Object.entries(data.tfidf).sort((a,b)=>b[1]-a[1]).slice(0, 100 + 1).map(e=>{return{'key': e[0], 'value': e[1]}}));
         
         });
     }
 }
 
-function dropdown(e){
-    [...document.getElementsByClassName('dropdown-selection')].forEach(e=>e.style.display = "block");
+function descriptionControl(e){
+    document.getElementById('description-box').innerHTML = data.specifics[e.target.getAttribute('href')].description;
 }
+
+function website_display(links){
+    document.body.innerHTML += `<div id="websites"></div><div id="description-box"></div>`
+    l = [];
+    for(let link in links){
+        l.push(`<a href="` + link + `">` + links[link].title + `</a>`)
+    }
+    Object.keys(links).reduce((prev, next)=>next.length > prev.length)
+    document.getElementById('websites').innerHTML = l.join('<br>');
+    [...document.getElementById('websites').childNodes].forEach(e=>e.addEventListener("mouseover", descriptionControl));
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
 	// searchbar controls
@@ -58,18 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function cloud(tags){
 
-document.getElementById('cloud-container').innerHTML += `<div class="dropdown-container" style="position: absolute; left: 1300px; top: 100px;">
-<button onclick="dropdown(event)" class="dropdown-button" id="display">
-    <p>Wordcloud</p>
-    <img style="height: 15px; width: 10px;" src="https://image.flaticon.com/icons/svg/60/60995.svg"></img>
-</button>
-<div class="dropdown-selection" style="display: none;">
-    <p>lol</p>
-    <p>this</p>
-    <p> is </p>
-    <p>fun</p>
-</div>
-</div>`
 
 var fill = d3.scale.category20b();
 
