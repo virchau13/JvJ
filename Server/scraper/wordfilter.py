@@ -21,12 +21,14 @@ def filter_words_from_search(search_results):
     t0 = time.time()
     if (len(search_results) > 0):
         site_list = []
+        context_list = []
         for page_num in range(len(search_results)):
             page = search_results[page_num]
             tokens = tokenizer.tokenize(page['title'] + " " + page['description'] + " " + page['content'])
             filteredwords = [x for x in [w for w in tokens] if (x not in string.punctuation and not x.isdigit())]
             lemmatized_words = [lemmatize(w.lower()) for w in filteredwords if (lemmatize(w.lower()) not in stop_words and w != "")]
             site_list.append(Text(lemmatized_words))
+            context_list.append(nltk.text.ContextIndex(lemmatized_words))
         dict_list = [dict(site.vocab()) for site in site_list]
         site_dict = {}
         for page_num in range(len(search_results)):
@@ -40,7 +42,7 @@ def filter_words_from_search(search_results):
             stuff_dict["importance"][search_results[i]["link"]] = i+1
             stuff_dict["description"][search_results[i]["link"]] = search_results[i]["description"]
 
-        return site_dict, stuff_dict
+        return site_dict, stuff_dict, context_list
     else:
         return {'error': 404}
 
@@ -57,13 +59,13 @@ def get_scraped_urls(search_results):
 
 #Compiles search and filter into one command
 def scraper(querystring, num_results):
-	results= scrape_google(querystring, num_results, 'en')
+	results = scrape_google(querystring, num_results, 'en')
 
 	return filter_words_from_search(results)
 
 #Outputs as a Panda DataFrame
 def scraper_df(querystring, num_results):
-    results, stuff = scraper(querystring, num_results)
+    results, stuff, index = scraper(querystring, num_results)
     results = pd.DataFrame.from_dict(results, orient="index").fillna(0)
     #results.columns = ['Site' if x=='index' else x for x in results.columns]
     return results, stuff
@@ -73,7 +75,14 @@ def scrape_urls(querystring, num_results):
 
     return get_scraped_urls(results)
 
+def get_related_words(word, context_index):
+    similar_list = []
+    for page in context_index:
+        if (page.similar_words(word) != None):
+            for similar in page.similar_words(word):
+                similar_list.append(similar)
+    return similar_list
+
 if __name__ == "__main__":
-    result, titles = scraper('lol', 10)
-    print(result)
-    print(titles)
+    results, things, context_index = scraper("apple", 10)
+    print(get_related_words("apple", context_index))
