@@ -1,6 +1,9 @@
 from gevent import monkey
 monkey.patch_all()
+<<<<<<< HEAD
+=======
 
+>>>>>>> master
 # Generic Imports
 from flask import Flask, jsonify, request
 from flask_cors import CORS
