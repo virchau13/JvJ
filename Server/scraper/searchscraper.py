@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
-import requests, time, re, codecs, grequests
+import time, re, codecs, grequests, requests
 
 USER_AGENT = {'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'}
 
@@ -53,12 +53,15 @@ def parse_results(html, keyword):
 def scrape_google(search_term, number_results, language_code):
     keyword, html = fetch_results(search_term, number_results, language_code)
     results = parse_results(html, keyword)
-    t = time.time()
+    t0 = time.time()
     response = grequests.map([grequests.get(u) for u in [x['link'] for x in results]])
-    print('Website fetch time total:', time.time()-t, 'seconds')
+    print('Website fetch time total:', time.time()-t0, 'seconds')
     thing = [BeautifulSoup(res.text, 'html.parser').find_all(text=True) if res else None for res in response]
     contents = [[x.replace('\n', '').replace('\t', '').replace('\r', '') for x in tex if not x.parent.name in ['style', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(x.encode('utf-8')))] if tex else [] for tex in thing]
     for i in range(len(results)):
         results[i]['content'] = ' '.join(contents[i])
     print('Everything done time:', time.time()-t0, 'seconds')
     return results
+
+if __name__ == "__main__":
+    print(scrape_google('lol', 50, 'en'))
