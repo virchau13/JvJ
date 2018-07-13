@@ -9,6 +9,14 @@ class Graph():
 					if j != i:
 						self.new_edge(j, i, dict_dict[j][i])
 
+	def __repr__(self):
+		print("Nodes:")
+		print(self.graph.keys())
+		print("Edges:")
+		for i in self.graph.keys():
+			print(i + ": " + str(self.importance(i)))
+		return "------"
+
 	def new_node(self, name):
 		self.graph[name] = {}
 
@@ -23,3 +31,8 @@ class Graph():
 		for i in self.graph.keys():
 			del self.graph[i][name]
 
+	def importance(self, name):
+		counter = 0
+		for i in self.graph[name].keys():
+			counter += i
+		return counter
