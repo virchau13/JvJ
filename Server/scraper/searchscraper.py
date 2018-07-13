@@ -4,8 +4,9 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from pathlib import Path
 import requests, time, re, codecs, grequests, os
+import user_agent
 
-USER_AGENT = {'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'}
+USER_AGENT = {'User-Agent': user_agent.generate_user_agent(os='mac',navigator='chrome')}
 
 google_symbols = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', ']', '^', '_', '`', '~', '\\']
 symbol_dict = {}
@@ -80,3 +81,6 @@ def scrape_google(search_term, number_results, language_code):
 
     print('Everything done time:', time.time()-t0, 'seconds')
     return results
+
+if __name__ == "__main__":
+    print(scrape_google('flugr', 5, 'en'))

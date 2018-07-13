@@ -28,7 +28,7 @@ def root():
 
 @app.route("/scrape")
 def scrape():
-	scraper_values = scraper_df(request.args.get("querystring"), 1000)
+	scraper_values = scraper_df(request.args.get("querystring"), 25)
 	tfidf_values = tfidf(scraper_values)
 	tfidf_pd_values = tfidf_df(scraper_values, request.args.get("querystring"))
 	return jsonify({
