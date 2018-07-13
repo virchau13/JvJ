@@ -7,6 +7,7 @@ from nltk.stem import WordNetLemmatizer
 import re
 import pandas as pd
 import time
+from collections import defaultdict
 
 from searchscraper import scrape_google
 
@@ -32,8 +33,14 @@ def filter_words_from_search(search_results):
             site_dict[search_results[page_num]['link']] = dict_list[page_num]
         t1 = time.time()
         print("Filter Time: " + str(t1 - t0))
-        title_list = [page['title'] for page in search_results]
-        return site_dict, title_list
+
+        stuff_dict = defaultdict(lambda:defaultdict())
+        for i in range(len(search_results)):
+            stuff_dict["title"][search_results[i]["link"]] = search_results[i]["title"]
+            stuff_dict["importance"][search_results[i]["link"]] = i+1
+            stuff_dict["description"][search_results[i]["link"]] = search_results[i]["description"]
+
+        return site_dict, stuff_dict
     else:
         return {'error': 404}
 
@@ -56,10 +63,10 @@ def scraper(querystring, num_results):
 
 #Outputs as a Panda DataFrame
 def scraper_df(querystring, num_results):
-    results, titles = scraper(querystring, num_results)
+    results, stuff = scraper(querystring, num_results)
     results = pd.DataFrame.from_dict(results, orient="index").fillna(0)
     #results.columns = ['Site' if x=='index' else x for x in results.columns]
-    return results, titles
+    return results, stuff
 
 def scrape_urls(querystring, num_results):
     results = scrape_google(querystring, num_results, 'en')
@@ -67,6 +74,6 @@ def scrape_urls(querystring, num_results):
     return get_scraped_urls(results)
 
 if __name__ == "__main__":
-    result, titles = scraper_df('lol', 10)
+    result, titles = scraper('lol', 10)
     print(result)
     print(titles)

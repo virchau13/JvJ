@@ -7,8 +7,8 @@ import pandas as pd
 
 from kmeans import KMeans_Generator
 
-def tfidf_df(sameData, queryer):
-	kmeans_stuff = KMeans_Generator(3, sameData)
+def tfidf_df(sameData, stuff, queryer):
+	kmeans_stuff = KMeans_Generator(3, sameData, stuff["titles"])
 	collected = defaultdict(lambda:0)
 	count = 0
 	for i in sameData.index:
@@ -19,5 +19,7 @@ def tfidf_df(sameData, queryer):
 			if int(sameData.loc[i, j]):
 				collected[i]["data"][j] = int(sameData.loc[i, j])
 		collected[i]["cluster"] = int(kmeans_stuff[i])
-		collected[i]["importance"] = count
+		collected[i]["importance"] = stuff["importance"][i]
+		collected[i]["title"] = stuff["title"][i]
+		collected[i]["description"] = stuff["description"][i]
 	return collected

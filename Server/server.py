@@ -33,10 +33,11 @@ def root():
 
 @app.route("/scrape")
 def scrape():
+	print("Recieved Query!")
 	try:
-		scraper_values = scraper_df(request.args.get("querystring"), 25)
+		scraper_values, stuff = scraper_df(request.args.get("querystring"), 25)
 		tfidf_values = tfidf(scraper_values)
-		tfidf_pd_values = tfidf_df(scraper_values, request.args.get("querystring"))
+		tfidf_pd_values = tfidf_df(scraper_values, stuff, request.args.get("querystring"))
 		db.insert({"querystring" : request.args.get("querystring"), "tfidf" : tfidf_values, "tfidf_pd_values" : tfidf_pd_values})
 		return jsonify({
 			"tfidf" : tfidf_values,
