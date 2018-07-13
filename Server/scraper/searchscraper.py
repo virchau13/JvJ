@@ -1,9 +1,6 @@
 from bs4 import BeautifulSoup
-import re
 from urllib.request import urlopen
-import requests
-import time
-import codecs
+import requests, time, re, codecs, grequests
 
 USER_AGENT = {'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'}
 
@@ -23,7 +20,7 @@ def fetch_results(search_term, number_results, language_code):
     response = requests.get(google_url, headers=USER_AGENT)
     response.raise_for_status()
     t1 = time.time()
-    print("Fetch Time: " + str(t1 - t0))
+    print("Google results fetch time: " + str(t1 - t0))
 
     return search_term, response.text
 
@@ -49,53 +46,19 @@ def parse_results(html, keyword):
                 found_results.append({'keyword': keyword, 'rank': rank, 'title': title, 'description': description, 'link': link.replace("/imgres?imgurl=", "")})
                 rank += 1
     t1 = time.time()
-    print("Parse Time: " + str(t1 - t0))
+    print("Parse time: " + str(t1 - t0))
     return found_results
 
 #Scraping websites from google search for data
 def scrape_google(search_term, number_results, language_code):
-    t0 = time.time()
-    try:
-        keyword, html = fetch_results(search_term, number_results, language_code)
-        results = parse_results(html, keyword)
-
-        #Checking if site is accessible (CloudFlare Protection)
-        for site in range(len(results)): 
-            t2 = time.time()
-            try:
-                response = requests.get(results[site]['link'], headers=USER_AGENT, verify=False)
-                response.raise_for_status()
-                soup = BeautifulSoup(response.text, 'html.parser')
-                site_content = soup.find_all(text=True)
-            except requests.HTTPError as err:
-                # if (err.response.status_code == 503):
-                site_content = ""
-
-            filtered_site = ""
-            urls = []
-            for url in soup.find_all('a', attrs={'href': re.compile("^http://")}):
-                urls.append(url.get('href'))
-            
-        #Taking all data from  website and removing \ symbols (newline, etc)
-            for text in site_content:
-                if (not text.parent.name in ['style', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(text.encode('utf-8')))):
-                    text = text.replace('\n', '').replace('\r', '').replace('\t', '')  
-                    filtered_site += text + " "
-            results[site]['content'] = filtered_site
-            results[site]['urls'] = urls
-
-            t3 = time.time()
-            print("Scrape Time: " + str(t3 - t2) + " Rank: " + str(results[site]['rank']))
-        t1 = time.time()
-        print("Scrape Time: " + str(t1 - t0))
-        return results
-    #Error Catching
-    except AssertionError:
-        raise Exception("Incorrect arguments parsed to function")
-    except requests.HTTPError:
-        raise Exception("You appear to have been blocked by Google")
-    except requests.RequestException:
-        raise Exception("Appears to be an issue with your connection")
-
-if __name__ == "__main__":
-    print(scrape_google("test", 5, 'en')[0]['urls'])
+    keyword, html = fetch_results(search_term, number_results, language_code)
+    results = parse_results(html, keyword)
+    t = time.time()
+    response = grequests.map([grequests.get(u) for u in [x['link'] for x in results]])
+    print('Website fetch time total:', time.time()-t, 'seconds')
+    thing = [BeautifulSoup(res.text, 'html.parser').find_all(text=True) if res else None for res in response]
+    contents = [[x.replace('\n', '').replace('\t', '').replace('\r', '') for x in tex if not x.parent.name in ['style', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(x.encode('utf-8')))] if tex else [] for tex in thing]
+    for i in range(len(results)):
+        results[i]['content'] = ' '.join(contents[i])
+    print('Everything done time:', time.time()-t0, 'seconds')
+    return results
