@@ -1,5 +1,45 @@
 let ipaddr = '0.0.0.0';
 
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (!mutation.addedNodes) return
+      for (var i = 0; i < mutation.addedNodes.length; i++) {
+        if([...document.querySelectorAll('text')].filter(e=>e.parentNode.nodeName==='g').length === 101){
+            [...document.querySelectorAll('text')].forEach(e=>e.addEventListener('click', textfly))
+        }
+      }
+    })
+  })
+  
+function textfly(e){
+    [...document.querySelectorAll('text')].filter(x=>x!==e.target).forEach(e=>{e.style.animation = 'moveoffscreen 4s forwards'});
+    document.getElementById('cloud-container').appendChild(Object.assign(document.createElement('canvas'), {id: 'chart'}))
+    console.log(e.target);
+    window.chart = new Chart(document.getElementById('chart').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: Object.entries(data.specifics).filter(x=>x[1].data[e.target.innerHTML]).map(x=>x[1].data[e.target.innerHTML]),
+                backgroundColor: Array(Object.entries(data.specifics).filter(x=>x[1].data[e.target.innerHTML]).length).fill(undefined).map(x=>'#' + (function co(lor){   return (lor += [0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'][Math.floor(Math.random()*16)]) && (lor.length == 6) ?  lor : co(lor); })(''))
+            }],
+            labels: Object.entries(data.specifics).filter(x=>x[1].data[e.target.innerHTML]).map(x=>x[1].title)
+        },
+        options: {
+            responsive: false
+        }
+    })
+    e.target.setAttribute('transform', 'translate(0,0)rotate(0)');
+}
+
 function fetcherror(str){
 	// TODO: add UI of error
 	alert(str)
@@ -70,6 +110,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function cloud(tags){
 
+observer.observe(document.getElementById('cloud-container'), {
+    childList: true,
+    subtree: true, 
+    attributes: false, 
+    characterData: false
+});
+    
 
 var fill = d3.scale.category20b();
 

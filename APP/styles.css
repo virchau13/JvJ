@@ -15,7 +15,9 @@ input::placeholder {
     font-style: italic;
 }
 
-
+text {
+    cursor: pointer;
+}
 
 .dropdown-button {
     border: 1px solid black;
@@ -50,6 +52,11 @@ input::placeholder {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+@keyframes moveoffscreen {
+    0% {  }
+    100% { transform: translateX(-100%) }
 }
 
 #topbar {
@@ -87,4 +94,12 @@ input::placeholder {
     top: 873px;
     right: 50px;
     border-radius: 20px;
+}
+
+#chart {
+    height: 350px;
+    width: 350px;
+    right: 25px;
+    top: 75px;
+    position: absolute;
 }
