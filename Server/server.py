@@ -33,6 +33,7 @@ def root():
 
 @app.route("/scrape")
 def scrape():
+	print("Recieved Query!")
 	try:
 		scraper_values = scraper_df(request.args.get("querystring"), 25)
 		tfidf_values = tfidf(scraper_values)
