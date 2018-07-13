@@ -1,5 +1,28 @@
 let ipaddr = '0.0.0.0';
 
+var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (!mutation.addedNodes) return
+      for (var i = 0; i < mutation.addedNodes.length; i++) {
+        if([...document.querySelectorAll('text')].filter(e=>e.parentNode.nodeName==='g').length === 101){
+            [...document.querySelectorAll('text')].forEach(e=>e.addEventListener('click', textfly))
+        }
+      }
+    })
+  })
+  
+function textfly(e){
+    [...document.querySelectorAll('text')].filter(x=>x!==e.target).forEach(e=>{e.style.animation = 'moveoffscreen 5s forwards'});
+    e.target.animate([
+        {
+            transform: e.target.getAttribute('transform')
+        },
+        {
+            transform: 'translate(0,0)rotate(0)'
+        }
+    ], 5000);
+}
+
 function fetcherror(str){
 	// TODO: add UI of error
 	alert(str)
@@ -70,6 +93,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function cloud(tags){
 
+observer.observe(document.getElementById('cloud-container'), {
+    childList: true,
+    subtree: true, 
+    attributes: false, 
+    characterData: false
+});
+    
 
 var fill = d3.scale.category20b();
 

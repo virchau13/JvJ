@@ -52,6 +52,11 @@ input::placeholder {
     100% { transform: rotate(360deg); }
 }
 
+@keyframes moveoffscreen {
+    0% {  }
+    100% { transform: translateX(-100%) }
+}
+
 #topbar {
     background-color: #273043;
     height: 50px;
