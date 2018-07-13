@@ -60,21 +60,22 @@ def scrape_google(search_term, number_results, language_code):
     print('Website fetch time total:', time.time()-t0, 'seconds')
     soup_responses = [BeautifulSoup(res.text, 'html.parser') if res else None for res in responses]
     #Finding Span and taking the info (so not to remove it completely)
-    for response_num in range(len(soup_responses)):
-        response = soup_responses[response_num]
-        span_elements = [element.replace('\n', '').replace('\t', '').replace('\r', '') for element in [tag.text for tag in response.find_all('span')] if element.replace('\n', '').replace('\t', '').replace('\r', '') != '']
-        #print(span_elements)
-        results[response_num]['content'] = ' '.join(span_elements)
-    for soup in soup_responses:
-        for span_tag in soup.findAll('span'):
-            span_tag.unwrap()
+    # for response_num in range(len(soup_responses)):
+    #     response = soup_responses[response_num]
+    #     span_elements = [element.replace('\n', '').replace('\t', '').replace('\r', '') for element in [tag.text for tag in response.find_all('span')] if element.replace('\n', '').replace('\t', '').replace('\r', '') != '']
+    #     #print(span_elements)
+    #     results[response_num]['content'] = ' '.join(span_elements)
+    # for soup in soup_responses:
+    #     for span_tag in soup.findAll('span'):
+    #         span_tag.unwrap()
+    print(responses)
     soup_responses = [res.find_all(text=True) for res in soup_responses]
     contents = [[x.replace('\n', '').replace('\t', '').replace('\r', '') for x in tex if not x.parent.name in ['style', 'script', '[document]', 'head', 'title', 'span'] and not re.match('<!--.*-->', str(x.encode('utf-8')))] if tex else [] for tex in soup_responses]
     #results = [s.decompose() for s in soup_responses]
     for i in range(len(results)):
-        results[i]['content'] = results[i]['content'] + ' '.join(contents[i])
+        results[i]['content'] = ' '.join(contents[i])
     print('Everything done time:', time.time()-t0, 'seconds')
     return results
 
 if __name__ == "__main__":
-    print(scrape_google('lol', 5, 'en'))
+    print(scrape_google('flugr', 5, 'en'))
