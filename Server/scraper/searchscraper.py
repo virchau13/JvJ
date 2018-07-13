@@ -83,6 +83,7 @@ def scrape_google(search_term, number_results, language_code):
         results[i]['description'] = results[i].pop('snippet')
         results[i]['title'] = results[i].pop('name')
         results[i]['link'] = results[i].pop('url')
+        results[i]["rank"] = i
 
     print('Everything done time:', time.time()-t0, 'seconds')
     return results
