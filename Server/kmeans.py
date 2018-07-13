@@ -10,7 +10,7 @@ sys.path.append(os.path.abspath("./scraper"))
 from wordfilter import scraper, scraper_df
 from sklearn.cluster import KMeans
 
-def KMeans_Generator(clusters, dataframe):
+def KMeans_Generator(clusters, dataframe, titles):
     mat = dataframe.values
     # df = dataframe
     km = KMeans(n_clusters=clusters)

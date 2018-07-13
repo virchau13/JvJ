@@ -32,7 +32,8 @@ def filter_words_from_search(search_results):
             site_dict[search_results[page_num]['link']] = dict_list[page_num]
         t1 = time.time()
         print("Filter Time: " + str(t1 - t0))
-        return site_dict
+        title_list = [page['title'] for page in search_results]
+        return site_dict, title_list
     else:
         return {'error': 404}
 
@@ -49,15 +50,16 @@ def get_scraped_urls(search_results):
 
 #Compiles search and filter into one command
 def scraper(querystring, num_results):
-	results = scrape_google(querystring, num_results, 'en')
+	results= scrape_google(querystring, num_results, 'en')
 
 	return filter_words_from_search(results)
 
 #Outputs as a Panda DataFrame
 def scraper_df(querystring, num_results):
-    results = pd.DataFrame.from_dict(scraper(querystring, num_results), orient="index").fillna(0)
+    results, titles = scraper(querystring, num_results)
+    results = pd.DataFrame.from_dict(results, orient="index").fillna(0)
     #results.columns = ['Site' if x=='index' else x for x in results.columns]
-    return results
+    return results, titles
 
 def scrape_urls(querystring, num_results):
     results = scrape_google(querystring, num_results, 'en')
@@ -65,4 +67,6 @@ def scrape_urls(querystring, num_results):
     return get_scraped_urls(results)
 
 if __name__ == "__main__":
-    print(scrape_urls('sgcodecampus', 5))
+    result, titles = scraper_df('lol', 10)
+    print(result)
+    print(titles)

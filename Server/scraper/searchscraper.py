@@ -72,7 +72,7 @@ def scrape_google(search_term, number_results, language_code):
     t = time.time()
     response = grequests.map([grequests.get(u) for u in [x['url'] for x in results]])
     print('Website fetch time total:', time.time()-t, 'seconds')
-        soup_list = [BeautifulSoup(res.text, 'html.parser') for res in response] #.find_all(text=True)
+    soup_list = [BeautifulSoup(res.text, 'html.parser') for res in response] #.find_all(text=True)
     for soup in soup_list:
         for span in soup.find_all('span'):
             span.decompose()
