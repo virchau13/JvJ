@@ -7,9 +7,31 @@ body {
     font-family: Roboto;
 }
 
+button {
+    cursor: pointer;
+}
+
 input::placeholder {
     font-style: italic;
 }
+
+
+
+.dropdown-button {
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 120px;
+}
+
+.dropdown-button>* {
+    display: inline;
+}
+
+.dropdown-selection {
+    position: absolute;
+    background-color: #f1f1f1;
+}
+
 
 #searchbar {
     margin-left: 40%;

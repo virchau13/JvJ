@@ -46,14 +46,30 @@ function search(e){
     }
 }
 
+function dropdown(e){
+    [...document.getElementsByClassName('dropdown-selection')].forEach(e=>e.style.display = "block");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 	// searchbar controls
 	let searchbar = document.getElementById("search");
-	searchbar.addEventListener("keypress", search)
+    searchbar.addEventListener("keypress", search)
 })
 
 function cloud(tags){
 
+document.getElementById('cloud-container').innerHTML += `<div class="dropdown-container" style="position: absolute; left: 1300px; top: 100px;">
+<button onclick="dropdown(event)" class="dropdown-button" id="display">
+    <p>Wordcloud</p>
+    <img style="height: 15px; width: 10px;" src="https://image.flaticon.com/icons/svg/60/60995.svg"></img>
+</button>
+<div class="dropdown-selection" style="display: none;">
+    <p>lol</p>
+    <p>this</p>
+    <p> is </p>
+    <p>fun</p>
+</div>
+</div>`
 
 var fill = d3.scale.category20b();
 
