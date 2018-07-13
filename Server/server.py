@@ -48,8 +48,8 @@ def scrape():
 		queryer = Query()
 		if len(db.search(queryer.querystring == request.args.get("querystring"))):
 			return jsonify({
-					"tfidf" : db.search(queryer.querystring == request.args.get("querystring"))[0].tfidf,
-					"specifics" : db.search(queryer.querystring == request.args.get("querystring"))[0].tfidf_pd_values
+					"tfidf" : db.search(queryer.querystring == request.args.get("querystring"))[0]["tfidf"],
+					"specifics" : db.search(queryer.querystring == request.args.get("querystring"))[0]["tfidf_pd_values"]
 				})
 		else:
 			return jsonify({
