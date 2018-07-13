@@ -1,8 +1,10 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import time, re, codecs, grequests, requests
+import user_agent
 
-USER_AGENT = {'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'}
+
+USER_AGENT = {'User-Agent': user_agent.generate_user_agent(os='mac',navigator='chrome')}
 
 google_symbols = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', ']', '^', '_', '`', '~', '\\']
 symbol_dict = {}
@@ -54,12 +56,23 @@ def scrape_google(search_term, number_results, language_code):
     keyword, html = fetch_results(search_term, number_results, language_code)
     results = parse_results(html, keyword)
     t0 = time.time()
-    response = grequests.map([grequests.get(u) for u in [x['link'] for x in results]])
+    responses = grequests.map([grequests.get(u) for u in [x['link'] for x in results]])
     print('Website fetch time total:', time.time()-t0, 'seconds')
-    thing = [BeautifulSoup(res.text, 'html.parser').find_all(text=True) if res else None for res in response]
-    contents = [[x.replace('\n', '').replace('\t', '').replace('\r', '') for x in tex if not x.parent.name in ['style', 'script', '[document]', 'head', 'title', 'span'] and not re.match('<!--.*-->', str(x.encode('utf-8')))] if tex else [] for tex in thing]
+    soup_responses = [BeautifulSoup(res.text, 'html.parser') if res else None for res in responses]
+    #Finding Span and taking the info (so not to remove it completely)
+    for response_num in range(len(soup_responses)):
+        response = soup_responses[response_num]
+        span_elements = [element.replace('\n', '').replace('\t', '').replace('\r', '') for element in [tag.text for tag in response.find_all('span')] if element.replace('\n', '').replace('\t', '').replace('\r', '') != '']
+        #print(span_elements)
+        results[response_num]['content'] = ' '.join(span_elements)
+    for soup in soup_responses:
+        for span_tag in soup.findAll('span'):
+            span_tag.unwrap()
+    soup_responses = [res.find_all(text=True) for res in soup_responses]
+    contents = [[x.replace('\n', '').replace('\t', '').replace('\r', '') for x in tex if not x.parent.name in ['style', 'script', '[document]', 'head', 'title', 'span'] and not re.match('<!--.*-->', str(x.encode('utf-8')))] if tex else [] for tex in soup_responses]
+    #results = [s.decompose() for s in soup_responses]
     for i in range(len(results)):
-        results[i]['content'] = ' '.join(contents[i])
+        results[i]['content'] = results[i]['content'] + ' '.join(contents[i])
     print('Everything done time:', time.time()-t0, 'seconds')
     return results
 
