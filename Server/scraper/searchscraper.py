@@ -58,7 +58,7 @@ def scrape_google(search_term, number_results, language_code):
     t0 = time.time()
     responses = grequests.map([grequests.get(u) for u in [x['link'] for x in results]])
     print('Website fetch time total:', time.time()-t0, 'seconds')
-    soup_responses = [BeautifulSoup(res.text, 'html.parser') if res else None for res in responses]
+    soup_responses = [BeautifulSoup(res.text, 'html.parser') for res in responses]
     #Finding Span and taking the info (so not to remove it completely)
     # for response_num in range(len(soup_responses)):
     #     response = soup_responses[response_num]
@@ -68,7 +68,6 @@ def scrape_google(search_term, number_results, language_code):
     # for soup in soup_responses:
     #     for span_tag in soup.findAll('span'):
     #         span_tag.unwrap()
-    print(responses)
     soup_responses = [res.find_all(text=True) for res in soup_responses]
     contents = [[x.replace('\n', '').replace('\t', '').replace('\r', '') for x in tex if not x.parent.name in ['style', 'script', '[document]', 'head', 'title', 'span'] and not re.match('<!--.*-->', str(x.encode('utf-8')))] if tex else [] for tex in soup_responses]
     #results = [s.decompose() for s in soup_responses]
@@ -78,4 +77,4 @@ def scrape_google(search_term, number_results, language_code):
     return results
 
 if __name__ == "__main__":
-    print(scrape_google('flugr', 5, 'en'))
+    print(scrape_google('minecraft', 25, 'en'))
