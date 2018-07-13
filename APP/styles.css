@@ -71,3 +71,18 @@ input::placeholder {
     left: 79%;
     border: 1px solid black;
 }
+
+#websites {
+    margin: auto;
+    text-align: center;
+}
+
+#description-box {
+    border: 1px solid black;
+    height: 400px;
+    width: 200px;
+    position: absolute;
+    top: 873px;
+    right: 50px;
+    border-radius: 20px;
+}
