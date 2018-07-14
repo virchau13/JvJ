@@ -16,6 +16,12 @@ function textfly(e){
     [...document.querySelectorAll('text')].filter(x=>x!==e.target).forEach(e=>{e.style.animation = 'moveoffscreen 4s forwards'});
     document.getElementById('cloud-container').appendChild(Object.assign(document.createElement('canvas'), {id: 'chart-occurence'}))
     document.getElementById('cloud-container').appendChild(Object.assign(document.createElement('canvas'), {id: 'chart-frequency'}))
+    document.getElementById('cloud-container').innerHTML += `<button class="btn" onclick="cloud(Object.entries(data.tfidf).sort((a,b)=>b[1]-a[1]).slice(0, 100 + 1).map(e=>{return{'key': e[0], 'value': e[1]}}))" style="position: absolute; top: 75px; left: 50px; width: 200px; height: 200px;">Back to Wordcloud </button>`;
+    e.target.setAttribute('transform', 'translate(0,0)rotate(0)');
+    fetch('http://0.0.0.0:5000/relatedWords?querystring=' + last_searched + '&wordSearch=' + e.target.innerHTML)
+    .then(res=>res.ok ? res.json() : console.error('http error ' + res.status))
+    .then(data=>console.log(data));
+    delete window.onresize;
     console.log(e.target);
     window.chartOccurence = new Chart(document.getElementById('chart-occurence').getContext('2d'), {
         type: 'doughnut',
@@ -43,7 +49,7 @@ function textfly(e){
             responsive: false
         }
     })
-    e.target.setAttribute('transform', 'translate(0,0)rotate(0)');
+   
 }
 
 function fetcherror(str){
@@ -63,6 +69,7 @@ function about(){
 
 function search(e){
     if(e.which === 13){
+        window.last_searched = e.target.value;
         if(!document.getElementById('searchbar')){ document.getElementById('root-container').innerHTML = `<div id="searchbar">
         <div id="loader" style="border: 8px solid #f3f3f3; 
         border-top: 8px solid #555;
@@ -115,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 function cloud(tags){
-
+document.getElementById('cloud-container').innerHTML = '';
 observer.observe(document.getElementById('cloud-container'), {
     childList: true,
     subtree: true, 
@@ -145,7 +152,7 @@ var layout = d3.layout.cloud()
 
 var svg = d3.select("#cloud-container").append("svg")
         .attr("width", w)
-        .attr("height", h);
+        .attr("height", h)
 
 var vis = svg.append("g").attr("transform", "translate(" + [w >> 1, h >> 1] + ")");
 
@@ -154,7 +161,7 @@ window.onresize = function(){ update(); }
 function draw(data, bounds) {
     var w = window.innerWidth,
         h = window.innerHeight;
-
+    console.log(w,h);
     svg.attr("width", w).attr("height", h);
 
     scale = bounds ? Math.min(
