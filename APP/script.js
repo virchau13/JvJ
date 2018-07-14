@@ -1,13 +1,5 @@
 let ipaddr = '0.0.0.0';
 
-function componentToHex(c) {
-    var hex = c.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
-}
-
-function rgbToHex(r, g, b) {
-    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-}
 
 var observer = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
@@ -22,9 +14,10 @@ var observer = new MutationObserver(function(mutations) {
   
 function textfly(e){
     [...document.querySelectorAll('text')].filter(x=>x!==e.target).forEach(e=>{e.style.animation = 'moveoffscreen 4s forwards'});
-    document.getElementById('cloud-container').appendChild(Object.assign(document.createElement('canvas'), {id: 'chart'}))
+    document.getElementById('cloud-container').appendChild(Object.assign(document.createElement('canvas'), {id: 'chart-occurence'}))
+    document.getElementById('cloud-container').appendChild(Object.assign(document.createElement('canvas'), {id: 'chart-frequency'}))
     console.log(e.target);
-    window.chart = new Chart(document.getElementById('chart').getContext('2d'), {
+    window.chartOccurence = new Chart(document.getElementById('chart').getContext('2d'), {
         type: 'doughnut',
         data: {
             datasets: [{
@@ -35,6 +28,15 @@ function textfly(e){
         },
         options: {
             responsive: false
+        }
+    });
+    window.chartFrequency = new Chart(document.getElementById('chart-frequency').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [data.tfidf[e.target.innerHTML], Object.values(data.tfidf).reduce((p,n)=>p+n)],
+                backgroundColor: Array(2).fill(undefined).map(x=>'#' + (function co(lor){   return (lor += [0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'][Math.floor(Math.random()*16)]) && (lor.length == 6) ?  lor : co(lor); })(''))
+            }]
         }
     })
     e.target.setAttribute('transform', 'translate(0,0)rotate(0)');
