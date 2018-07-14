@@ -17,7 +17,7 @@ function textfly(e){
     document.getElementById('cloud-container').appendChild(Object.assign(document.createElement('canvas'), {id: 'chart-occurence'}))
     document.getElementById('cloud-container').appendChild(Object.assign(document.createElement('canvas'), {id: 'chart-frequency'}))
     console.log(e.target);
-    window.chartOccurence = new Chart(document.getElementById('chart').getContext('2d'), {
+    window.chartOccurence = new Chart(document.getElementById('chart-occurence').getContext('2d'), {
         type: 'doughnut',
         data: {
             datasets: [{
@@ -36,7 +36,11 @@ function textfly(e){
             datasets: [{
                 data: [data.tfidf[e.target.innerHTML], Object.values(data.tfidf).reduce((p,n)=>p+n)],
                 backgroundColor: Array(2).fill(undefined).map(x=>'#' + (function co(lor){   return (lor += [0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'][Math.floor(Math.random()*16)]) && (lor.length == 6) ?  lor : co(lor); })(''))
-            }]
+            }],
+            labels: [e.target.innerHTML, 'the rest of the data']
+        },
+        options: {
+            responsive: false
         }
     })
     e.target.setAttribute('transform', 'translate(0,0)rotate(0)');
