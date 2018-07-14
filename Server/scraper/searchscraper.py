@@ -65,6 +65,11 @@ def fetch_results(search_term, number_results, language_code):
 #     print("Parse time: " + str(t1 - t0))
 #     return found_results
 
+blacklist = ['a', 'title', 'p', 'input', 'u', 'body', 'html',
+         'textarea', 'nobr', 'b', 'span', 'td', 'tr', 
+         'br', 'table', 'form', 'img', 'head', 'meta', 
+         'script', 'style', 'center', 'div']
+
 #Scraping websites from google search for data
 def scrape_google(search_term, number_results, language_code):
     t0 = time.time()
@@ -72,7 +77,13 @@ def scrape_google(search_term, number_results, language_code):
     t = time.time()
     response = grequests.map([grequests.get(u, timeout=0.5) for u in [x['url'] for x in results]])
     print('Website fetch time total:', time.time()-t, 'seconds')
-    contents = [[x.replace('\n', '').replace('\t', '').replace('\r', '') for x in tex if not x.parent.name in ['style', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(x.encode('utf-8')))] if tex else [] for tex in [BeautifulSoup(res.text, 'html.parser').find_all(text=True) if res else None for res in response]]
+    soup_list = [BeautifulSoup(res.text, 'html.parser') if res else BeautifulSoup("", 'html.parser') for res in response]
+    for soup in soup_list:
+        for tag in soup.findChildren():
+            if (tag.name in blacklist):
+                tag.decompose()
+    soup_list = [soup.find_all(text=True) for soup in soup_list]
+    contents = [[x.replace('\n', '').replace('\t', '').replace('\r', '') for x in tex if not x.parent.name in ['style', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(x.encode('utf-8')))] if tex != None else "" for tex in soup_list]
     for i in range(len(results)):
         results[i]['content'] = ' '.join(contents[i])
         results[i]['description'] = results[i].pop('snippet')
