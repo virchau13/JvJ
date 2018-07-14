@@ -72,12 +72,7 @@ def scrape_google(search_term, number_results, language_code):
     t = time.time()
     response = grequests.map([grequests.get(u, timeout=0.5) for u in [x['url'] for x in results]])
     print('Website fetch time total:', time.time()-t, 'seconds')
-    soup_list = [BeautifulSoup(res.text, 'html.parser') if res != None else BeautifulSoup("", 'html.parser') for res in response]
-    for soup in soup_list:
-        for span in soup.find_all('span'):
-            span.decompose()
-    soup_list = [soup.find_all(text=True) for soup in soup_list]
-    contents = [[x.replace('\n', '').replace('\t', '').replace('\r', '') for x in tex if not x.parent.name in ['style', 'script', '[document]', 'head', 'title', 'span'] and not re.match('<!--.*-->', str(x.encode('utf-8')))] for tex in soup_list]
+    contents = [[x.replace('\n', '').replace('\t', '').replace('\r', '') for x in tex if not x.parent.name in ['style', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(x.encode('utf-8')))] if tex else [] for tex in [BeautifulSoup(res.text, 'html.parser').find_all(text=True) if res else None for res in response]]
     for i in range(len(results)):
         results[i]['content'] = ' '.join(contents[i])
         results[i]['description'] = results[i].pop('snippet')

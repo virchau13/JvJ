@@ -96,10 +96,18 @@ text {
     border-radius: 20px;
 }
 
-#chart {
+.chart {
     height: 350px;
     width: 350px;
+    position: absolute;
+}
+
+#chart-occurence {
     right: 25px;
     top: 75px;
-    position: absolute;
+}
+
+#chart-frequency {
+    right: 25px;
+    top: 500px;
 }
