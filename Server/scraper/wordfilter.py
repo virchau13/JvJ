@@ -55,7 +55,7 @@ def scraper_df(querystring, num_results):
     results, stuff, index = scraper(querystring, num_results)
     results = pd.DataFrame.from_dict(results, orient="index").fillna(0)
     #results.columns = ['Site' if x=='index' else x for x in results.columns]
-    return results, stuff
+    return results, stuff, index
 
 def scrape_urls(querystring, num_results):
     results = scrape_google(querystring, num_results, 'en')
