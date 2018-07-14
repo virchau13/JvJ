@@ -19,7 +19,7 @@ def filter_words_from_search(search_results):
     t0 = time.time()
     if (len(search_results) > 0):
         site_dict = dict([[page['link'], [dict(site.vocab()) for site in [Text(tex) for tex in [[lemmatize(t.lower()) for t in x if t not in string.punctuation and not t.isdigit() and lemmatize(t.lower()) not in stop_words and t != ""] for x in [tokenizer.tokenize(a['title'] + " " + a['description'] + " " + a['content']) for a in search_results]]]][page_num]] for page_num, page in enumerate(search_results)])
-        context_list = [nltk.text.ContextIndex(tex) for tex in [[lemmatize(t.lower()) for t in x if t not in string.punctuation and not t.isdigit() and lemmatize(t.lower()) not in stop_words and t != "" and len(t) > 1] for x in [tokenizer.tokenize(a['title'] + " " + a['description'] + " " + a['content']) for a in search_results]]]
+        context_list = [nltk.text.ContextIndex(tex) for tex in [[lemmatize(t.lower()) for t in x if t not in string.punctuation and not t.isdigit() and lemmatize(t.lower()) not in stop_words and len(t) > 1] for x in [tokenizer.tokenize(a['title'] + " " + a['description'] + " " + a['content']) for a in search_results]]]
         t1 = time.time()
         print("Filter Time: " + str(t1 - t0))
 
@@ -71,5 +71,5 @@ def get_related_words(word, context_index):
     return similar_list
 
 if __name__ == "__main__":
-    results, things, context_index = scraper("apple", 10)
-    print(get_related_words("apple", context_index))
+    results, things, context_index = scraper("apple", 50)
+    print(results)
