@@ -12,7 +12,7 @@ tokenizer = RegexpTokenizer(r'[a-zA-Z]+')
 lemmatize = WordNetLemmatizer().lemmatize
 stop_words = set(stopwords.words('english'))
 
-
+stop_words.update(["quot"])
 
 #Take title, description, content of search results and outputs them as a dictionary per site.
 def filter_words_from_search(search_results):
