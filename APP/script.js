@@ -16,11 +16,11 @@ function textfly(e){
     [...document.querySelectorAll('text')].filter(x=>x!==e.target).forEach(e=>{e.style.animation = 'moveoffscreen 4s forwards'});
     document.getElementById('cloud-container').appendChild(Object.assign(document.createElement('canvas'), {id: 'chart-occurence'}))
     document.getElementById('cloud-container').appendChild(Object.assign(document.createElement('canvas'), {id: 'chart-frequency'}))
-    document.getElementById('cloud-container').innerHTML += `<button class="btn" onclick="cloud(Object.entries(data.tfidf).sort((a,b)=>b[1]-a[1]).slice(0, 100 + 1).map(e=>{return{'key': e[0], 'value': e[1]}}))" style="position: absolute; top: 75px; left: 50px; width: 200px; height: 200px;">Back to Wordcloud </button>`;
+    document.getElementById('cloud-container').innerHTML += `<button class="btn btn-primary" onclick="cloud(Object.entries(data.tfidf).sort((a,b)=>b[1]-a[1]).slice(0, 100 + 1).map(e=>{return{'key': e[0], 'value': e[1]}}))" style="position: absolute; top: 75px; left: 50px; width: 200px; height: 200px;">Back to Wordcloud </button>`;
     e.target.setAttribute('transform', 'translate(0,0)rotate(0)');
     fetch('http://0.0.0.0:5000/relatedWords?querystring=' + last_searched + '&wordSearch=' + e.target.innerHTML)
     .then(res=>res.ok ? res.json() : console.error('http error ' + res.status))
-    .then(data=>console.log(data));
+    .then(obj=>document.getElementById('websites').innerHTML = '<div id="related-words">' + Array(obj.length).fill(null).map(((x,i)=>'<p>'+obj[i]+'</p>')).join('') + '</div>' + document.getElementById('websites').innerHTML);
     delete window.onresize;
     console.log(e.target);
     window.chartOccurence = new Chart(document.getElementById('chart-occurence').getContext('2d'), {
@@ -58,12 +58,15 @@ function fetcherror(str){
 }
 
 let searchtopbar = Object.assign(document.createElement('input'), {id: 'searchtopbar'});
-searchtopbar.onkeypress = search;
+searchtopbar.addEventListener('keypress', search);
 searchtopbar.setAttribute('placeholder', 'Enter search here...')
 
 function about(){
-	document.getElementById('root-container').innerHTML = `
-	<h2 style="font-size: 50px;">rjeiriewrerjeirjejrijrijirjeirj i am sample text lorem5 ,eoroeremomr we did the GOOD stuff the GOOD stuff I'm telling you yeah</h2>`
+    document.getElementById('root-container').innerHTML = `THE DATA REFINERY, a project to make information more easily accessible and usable.
+    <br>
+    Credits: virchau13, junyynyyn, JustATin555<br>
+    Version: v1.0.0<br>
+    Installation: You're already here!<br>`
     topbar.appendChild(searchtopbar)
 }
 
@@ -93,7 +96,7 @@ function search(e){
         // GET data from server for rendering
         fetch("http://" + ipaddr + ":5000/scrape?querystring=" + e.target.value)
         .then((res) => res.ok ? res.json() : fetcherror('ERROR fetching from 192.168.1.81:5000/?query=' + e.target.value + '. HTTP Response code is ' + res.status))
-        .then((data) => {topbar.appendChild(searchtopbar); window.data = data; document.getElementById('root-container').removeChild(document.getElementById('searchbar')); console.log(data); website_display(data.specifics); cloud(Object.entries(data.tfidf).sort((a,b)=>b[1]-a[1]).slice(0, 100 + 1).map(e=>{return{'key': e[0], 'value': e[1]}}));
+        .then((data) => {topbar.appendChild(searchtopbar); window.data = data; if(document.getElementById('searchbar')){ document.getElementById('root-container').removeChild(document.getElementById('searchbar'))}; console.log(data); website_display(data.specifics); cloud(Object.entries(data.tfidf).sort((a,b)=>b[1]-a[1]).slice(0, 100 + 1).map(e=>{return{'key': e[0], 'value': e[1]}}));
         
         });
     }
@@ -122,6 +125,10 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 function cloud(tags){
+
+if(document.getElementById('related-words')){
+    document.getElementById('related-words').parentNode.removeChild(document.getElementById('related-words'));
+}
 document.getElementById('cloud-container').innerHTML = '';
 observer.observe(document.getElementById('cloud-container'), {
     childList: true,
