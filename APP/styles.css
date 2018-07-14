@@ -96,7 +96,7 @@ text {
     border-radius: 20px;
 }
 
-.chart {
+canvas {
     height: 350px;
     width: 350px;
     position: absolute;
