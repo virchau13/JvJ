@@ -83,7 +83,7 @@ def scrape_google(search_term, number_results, language_code):
     #         if (tag.name in blacklist):
     #             tag.decompose()
     soup_list = [soup.find_all(text=True) for soup in soup_list]
-    contents = [[x.replace('\n', '').replace('\t', '').replace('\r', '') for x in tex if not x.parent.name in ['style', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(x.encode('utf-8')))] if tex != None else "" for tex in soup_list]
+    contents = [[x.replace('\n', '').replace('\t', '').replace('\r', '') for x in tex if not x.parent.name in ['style', 'div',  'link', 'html', 'table', 'script', '[document]', 'head', 'title'] and not re.match('<!--.*-->', str(x.encode('utf-8')))] if tex != None else "" for tex in soup_list]
     for i in range(len(results)):
         results[i]['content'] = ' '.join(contents[i])
         results[i]['description'] = results[i].pop('snippet')
