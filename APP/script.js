@@ -61,7 +61,7 @@ function fetcherror(str){
 }
 
 function website_display(word){
-    document.body.innerHTML += `<div id="greyout" style="position:fixed;
+    document.body.innerHTML += `<div id="greyout" onkeydown="if(event.which===27){document.getElementById('greyout').parentNode.removeChild(document.getElementById('greyout'))}" style="position:fixed;
     z-index: 2; /* above everything else */
     top:0; left:0; bottom:0; right:0;
     background:rgba(0,0,0,.5);

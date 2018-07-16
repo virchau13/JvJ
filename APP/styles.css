@@ -111,7 +111,7 @@ canvas {
 #chart-frequency-container, #chart-frequency {
     position: absolute;
     right: 25px;
-    bottom: 75px;
+    bottom: 0px;
 }
 
 #related-words-fix {
