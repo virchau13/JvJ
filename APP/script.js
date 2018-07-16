@@ -54,8 +54,8 @@ function fetcherror(str){
 	alert(str)
 }
 
-let searchtopbar;
 
+let searchtopbar;
 
 function about(){
     document.getElementById('root-container').innerHTML = `THE DATA REFINERY, a project to make information more easily accessible and usable.
@@ -67,12 +67,13 @@ function about(){
 }
 
 function search(e){
+    console.log(e.which)
     if(e.which === 13){
         if(document.getElementById('websites')){
             document.getElementById('websites').parentNode.removeChild(document.getElementById('websites'));
         }
         window.last_searched = e.target.value;
-        if(!document.getElementById('searchbar')){ document.getElementById('root-container').innerHTML = `<div id="searchbar">
+        document.getElementById('root-container').innerHTML = `<div id="searchbar">
         <div id="loader" style="border: 8px solid #f3f3f3; 
         border-top: 8px solid #555;
         border-radius: 50%;
@@ -82,16 +83,7 @@ function search(e){
         animation: spin 2s linear infinite;"></div><br><p> Loading search results... </p>
     </div>
     <div id="cloud-container">	
-    </div>` } else {
-        // make loading bar
-        document.getElementById('searchbar').innerHTML = `<div id="loader" style="border: 8px solid #f3f3f3; 
-        border-top: 8px solid #555;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        margin-left: 30%;
-        animation: spin 2s linear infinite;"></div><br><p> Loading search results... </p>`
-    }
+    </div>`
         // GET data from server for rendering
         fetch("http://0.0.0.0:5000/scrape?querystring=" + e.target.value)
         .then((res) => res.ok ? res.json() : fetcherror('ERROR fetching from 192.168.1.81:5000/?query=' + e.target.value + '. HTTP Response code is ' + res.status))
@@ -108,6 +100,7 @@ function search(e){
 }
 
 function descriptionControl(e){
+    console.log('hover!')
     document.getElementById('description-box').innerHTML = data.specifics[e.target.getAttribute('href')].description;
 }
 
@@ -115,11 +108,10 @@ function website_display(links){
     document.body.innerHTML += `<div id="websites"></div><div id="description-box"></div>`
     l = [];
     for(let link in links){
-        l.push(`<a href="` + link + `">` + links[link].title + `</a>`)
+        l.push(`<a onmouseover="descriptionControl(event)" href="` + link + `">` + links[link].title + `</a>`)
     }
     Object.keys(links).reduce((prev, next)=>next.length > prev.length)
     document.getElementById('websites').innerHTML = l.join('<br>');
-    [...document.getElementById('websites').childNodes].forEach(e=>e.addEventListener("mouseover", descriptionControl));
 }
 
 

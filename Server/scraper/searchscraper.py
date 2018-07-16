@@ -1,5 +1,3 @@
-from gevent import monkey
-monkey.patch_all()
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from pathlib import Path
