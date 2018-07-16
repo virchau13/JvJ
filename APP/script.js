@@ -10,16 +10,19 @@ var observer = new MutationObserver(function(mutations) {
   })
   
 function textfly(e){
-    [...document.querySelectorAll('text')].filter(x=>x!==e.target).forEach(e=>{e.style.animation = 'moveoffscreen 4s forwards'});
-    document.getElementById('cloud-container').appendChild(Object.assign(document.createElement('canvas'), {id: 'chart-occurence'}))
-    document.getElementById('cloud-container').appendChild(Object.assign(document.createElement('canvas'), {id: 'chart-frequency'}))
-    document.getElementById('cloud-container').innerHTML += `<button class="btn btn-primary" onclick="cloud(Object.entries(data.tfidf).sort((a,b)=>b[1]-a[1]).slice(0, 100 + 1).map(e=>{return{'key': e[0], 'value': e[1]}}))" style="position: absolute; top: 75px; left: 50px; width: 200px; height: 200px;">Back to Wordcloud </button>`;
-    e.target.setAttribute('transform', 'translate(0,0)rotate(0)');
-    fetch('http://0.0.0.0:5000/relatedWords?querystring=' + last_searched + '&wordSearch=' + e.target.innerHTML)
+
+    fetch('http://127.0.0.1:5000/relatedWords?querystring=' + last_searched + '&wordSearch=' + e.target.innerHTML)
     .then(res=>res.ok ? res.json() : console.error('http error ' + res.status))
-    .then(obj=>document.getElementById('websites').innerHTML = '<div id="related-words">' + Array(obj.length).fill(null).map(((x,i)=>'<p>'+obj[i]+'</p>')).join('') + '</div>' + document.getElementById('websites').innerHTML);
-    delete window.onresize;
-    console.log(e.target);
+    .then(obj=>{document.body.innerHTML += '<div><div id="related-words-fix"><b><u>Related Words</u></b><br>' + obj.join('<br>') + '</div></div>';
+
+    [...document.querySelectorAll('text')].filter(x=>x.innerHTML!==e.target.innerHTML).forEach(e=>{e.style.animation = 'moveoffscreen 4s forwards'});
+    document.getElementById('cloud-container').innerHTML += `<button onclick="cloud(Object.entries(data.tfidf).sort((a,b)=>b[1]-a[1]).slice(0, 100 + 1).map(e=>{return{'key': e[0], 'value': e[1]}}))" style="color: white; background-color: #007bff; border-color: #007bff; font-size: 1rem; border-radius: .25rem; position: absolute; top: 75px; left: 50px; width: 200px; height: 30px;">Back to Wordcloud </button>
+    <button onclick="website_display('`+e.target.innerHTML+`')" style="color: white; background-color: #007bff; border-color: #007bff; font-size: 1rem; border-radius: .25rem; position: absolute; top: 110px; left: 50px; width: 200px; height: 60px;">Display websites with this word in them</button>`;
+    document.getElementById('cloud-container').appendChild(Object.assign(document.createElement('div'), {id: 'chart-occurence-container'}));
+    document.getElementById('cloud-container').appendChild(Object.assign(document.createElement('div'), {id: 'chart-frequency-container'}));
+    document.getElementById('chart-occurence-container').appendChild(Object.assign(document.createElement('canvas'), {id: 'chart-occurence'}))
+    document.getElementById('chart-frequency-container').appendChild(Object.assign(document.createElement('canvas'), {id: 'chart-frequency'}))
+    // /[^\-\d]*([\-\d]+),\s?([\-\d]+)[^\-\d]*([\-\d]+)/gm.exec(e.target.getAttribute('transform'))
     window.chartOccurence = new Chart(document.getElementById('chart-occurence').getContext('2d'), {
         type: 'doughnut',
         data: {
@@ -46,6 +49,9 @@ function textfly(e){
             responsive: false
         }
     })
+});
+    delete window.onresize;
+    
    
 }
 
@@ -54,6 +60,15 @@ function fetcherror(str){
 	alert(str)
 }
 
+function website_display(word){
+    document.body.innerHTML += `<div id="greyout" style="position:fixed;
+    z-index: 2; /* above everything else */
+    top:0; left:0; bottom:0; right:0;
+    background:rgba(0,0,0,.5);
+"> <div style="background-color: white; border-color: black; margin: auto; border-radius: 1rem; padding: 1rem 1rem 1rem 1rem; text-align: center;" ><u>Websites with this word in them, listed in order of occurence:</u><br>` + 
+    Object.entries(data.specifics).filter(e=>e[1].data[word]).sort((a,b)=>b[1].data[word]-a[1].data[word]).map(e=>'<a href="'+e[0]+'">'+e[1].title+'</a>').join('<br>') + 
+    `<br><button class="btn" onclick="document.getElementById('greyout').parentNode.removeChild(document.getElementById('greyout'))">Go Back</button></div></div>`
+}
 
 let searchtopbar;
 
@@ -67,7 +82,6 @@ function about(){
 }
 
 function search(e){
-    console.log(e.which)
     if(e.which === 13){
         if(document.getElementById('websites')){
             document.getElementById('websites').parentNode.removeChild(document.getElementById('websites'));
@@ -85,15 +99,14 @@ function search(e){
     <div id="cloud-container">	
     </div>`
         // GET data from server for rendering
-        fetch("http://0.0.0.0:5000/scrape?querystring=" + e.target.value)
-        .then((res) => res.ok ? res.json() : fetcherror('ERROR fetching from 192.168.1.81:5000/?query=' + e.target.value + '. HTTP Response code is ' + res.status))
+        fetch("http://127.0.0.1:5000/scrape?querystring=" + e.target.value)
+        .then((res) => res.ok ? res.json() : fetcherror('ERROR fetching from 127.0.0.1:5000/?query=' + e.target.value + '. HTTP Response code is ' + res.status))
         .then((data) => { 
             window.data = data; 
             if(document.getElementById('searchbar')){ 
                 document.getElementById('root-container').removeChild(document.getElementById('searchbar'))
             }
             console.log(data); 
-            website_display(data.specifics); 
             cloud(Object.entries(data.tfidf).sort((a,b)=>b[1]-a[1]).slice(0, 100 + 1).map(e=>{return{'key': e[0], 'value': e[1]}}));
         });
     }
@@ -102,16 +115,6 @@ function search(e){
 function descriptionControl(e){
     console.log('hover!')
     document.getElementById('description-box').innerHTML = data.specifics[e.target.getAttribute('href')].description;
-}
-
-function website_display(links){
-    document.body.innerHTML += `<div id="websites"></div><div id="description-box"></div>`
-    l = [];
-    for(let link in links){
-        l.push(`<a onmouseover="descriptionControl(event)" href="` + link + `">` + links[link].title + `</a>`)
-    }
-    Object.keys(links).reduce((prev, next)=>next.length > prev.length)
-    document.getElementById('websites').innerHTML = l.join('<br>');
 }
 
 
@@ -129,8 +132,8 @@ function cloud(tags){
 
 topbar.appendChild(searchtopbar);
 
-if(document.getElementById('related-words')){
-    document.getElementById('related-words').parentNode.removeChild(document.getElementById('related-words'));
+if(document.getElementById('related-words-fix')){
+    document.getElementById('related-words-fix').parentNode.removeChild(document.getElementById('related-words-fix'));
 }
 
 document.getElementById('cloud-container').innerHTML = '';
@@ -172,7 +175,6 @@ window.onresize = function(){ update(); }
 function draw(data, bounds) {
     var w = window.innerWidth,
         h = window.innerHeight;
-    console.log(w,h);
     svg.attr("width", w).attr("height", h);
 
     scale = bounds ? Math.min(

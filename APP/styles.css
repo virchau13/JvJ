@@ -102,16 +102,24 @@ canvas {
     position: absolute;
 }
 
-#chart-occurence {
+#chart-frequency-container, #chart-occurence {
+    position: absolute;
     right: 25px;
     top: 75px;
 }
 
-#chart-frequency {
+#chart-frequency-container, #chart-frequency {
+    position: absolute;
     right: 25px;
-    top: 500px;
+    bottom: 75px;
 }
 
-#related-words {
-    width: 200px; height: 400px; border: 1px solid black; position: absolute; left: 50px; bottom: 50px;
+#related-words-fix {
+    width: 200px; 
+    height: 400px; 
+    border: 1px solid black; 
+    position: absolute; 
+    left: 50px; 
+    bottom: 50px;
+    text-align: center;
 }
