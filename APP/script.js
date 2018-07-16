@@ -1,6 +1,3 @@
-let ipaddr = '0.0.0.0';
-
-
 var observer = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
       if (!mutation.addedNodes) return
@@ -57,9 +54,8 @@ function fetcherror(str){
 	alert(str)
 }
 
-let searchtopbar = Object.assign(document.createElement('input'), {id: 'searchtopbar'});
-searchtopbar.addEventListener('keypress', search);
-searchtopbar.setAttribute('placeholder', 'Enter search here...')
+let searchtopbar;
+
 
 function about(){
     document.getElementById('root-container').innerHTML = `THE DATA REFINERY, a project to make information more easily accessible and usable.
@@ -72,6 +68,9 @@ function about(){
 
 function search(e){
     if(e.which === 13){
+        if(document.getElementById('websites')){
+            document.getElementById('websites').parentNode.removeChild(document.getElementById('websites'));
+        }
         window.last_searched = e.target.value;
         if(!document.getElementById('searchbar')){ document.getElementById('root-container').innerHTML = `<div id="searchbar">
         <div id="loader" style="border: 8px solid #f3f3f3; 
@@ -94,10 +93,16 @@ function search(e){
         animation: spin 2s linear infinite;"></div><br><p> Loading search results... </p>`
     }
         // GET data from server for rendering
-        fetch("http://" + ipaddr + ":5000/scrape?querystring=" + e.target.value)
+        fetch("http://0.0.0.0:5000/scrape?querystring=" + e.target.value)
         .then((res) => res.ok ? res.json() : fetcherror('ERROR fetching from 192.168.1.81:5000/?query=' + e.target.value + '. HTTP Response code is ' + res.status))
-        .then((data) => {topbar.appendChild(searchtopbar); window.data = data; if(document.getElementById('searchbar')){ document.getElementById('root-container').removeChild(document.getElementById('searchbar'))}; console.log(data); website_display(data.specifics); cloud(Object.entries(data.tfidf).sort((a,b)=>b[1]-a[1]).slice(0, 100 + 1).map(e=>{return{'key': e[0], 'value': e[1]}}));
-        
+        .then((data) => { 
+            window.data = data; 
+            if(document.getElementById('searchbar')){ 
+                document.getElementById('root-container').removeChild(document.getElementById('searchbar'))
+            }
+            console.log(data); 
+            website_display(data.specifics); 
+            cloud(Object.entries(data.tfidf).sort((a,b)=>b[1]-a[1]).slice(0, 100 + 1).map(e=>{return{'key': e[0], 'value': e[1]}}));
         });
     }
 }
@@ -119,16 +124,23 @@ function website_display(links){
 
 
 document.addEventListener("DOMContentLoaded", () => {
-	// searchbar controls
+    // search bar on top configuration
+    searchtopbar = Object.assign(document.createElement('input'), {id: 'searchtopbar'})
+    searchtopbar.addEventListener('keypress', search);
+    searchtopbar.setAttribute('placeholder', 'Enter search here...');
+    // searchbar controls
 	let searchbar = document.getElementById("search");
     searchbar.addEventListener("keypress", search)
 })
 
 function cloud(tags){
 
+topbar.appendChild(searchtopbar);
+
 if(document.getElementById('related-words')){
     document.getElementById('related-words').parentNode.removeChild(document.getElementById('related-words'));
 }
+
 document.getElementById('cloud-container').innerHTML = '';
 observer.observe(document.getElementById('cloud-container'), {
     childList: true,
