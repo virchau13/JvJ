@@ -39,7 +39,7 @@ def scrape():
 	try:
 		querystring = request.args.get("querystring")
 		print("Recieved scrape query: " + querystring)
-		scraper_values, stuff, index = scraper_df(querystring, 50)
+		scraper_values, stuff, index = scraper_df(querystring, 100)
 		tfidf_values = tfidf(scraper_values)
 		tfidf_pd_values = tfidf_df(scraper_values, stuff, querystring)
 		db.insert({"querystring" : querystring, "tfidf" : tfidf_values, "tfidf_pd_values" : tfidf_pd_values})
