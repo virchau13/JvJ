@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from pathlib import Path
-import requests, time, re, codecs, grequests, os
+import time, re, codecs, grequests, os, requests
 import user_agent
 
 USER_AGENT = {'User-Agent': user_agent.generate_user_agent(os='mac',navigator='chrome')}
