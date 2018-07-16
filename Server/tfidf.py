@@ -23,12 +23,7 @@ def idf(dict_dict):
 
 # tfidf function
 def tfidf(pd_df):
-	dict_dict = {}
-	for i in pd_df.index:
-		dict_dict[i] = {}
-		for j in pd_df.columns:
-			if int(pd_df.loc[i, j]):
-				dict_dict[i][j] = int(pd_df.loc[i, j])
+	dict_dict = {k:{l:w for (l,w) in v.items() if (w)} for (k,v) in pd_df.to_dict(orient="index").items()}
 
 	tfidf_values = defaultdict(lambda:0)
 	tf_val = tf(dict_dict)
